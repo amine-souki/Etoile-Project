@@ -61,8 +61,6 @@ export default function NextMatchCountdown({ nextMatch, homeLogoUrl, awayLogoUrl
   }, [nextMatch.dateTime]);
 
   // Logo URLs are now received directly as props
-  // const homeLogo = getLogo(nextMatch.homeTeam);
-  // const awayLogo = getLogo(nextMatch.awayTeam);
 
   return (
     <div className="w-full max-w-4xl text-white flex flex-col items-center relative z-10 px-4">
@@ -70,8 +68,6 @@ export default function NextMatchCountdown({ nextMatch, homeLogoUrl, awayLogoUrl
 
         {/* Competition Logo/Name */}
         <div className="flex items-center gap-2 mb-6 text-white/90">
-             {/* Use a placeholder icon or fetch the actual competition logo */}
-             {/* Example using Lucide Trophy icon */}
             <Trophy className="h-5 w-5" />
             <span className="text-sm font-medium">{nextMatch.competition} {nextMatch.round && `- ${nextMatch.round}`}</span>
         </div>
@@ -94,7 +90,8 @@ export default function NextMatchCountdown({ nextMatch, homeLogoUrl, awayLogoUrl
 
         {/* Match Info */}
         <div className="flex-shrink-0 text-center">
-           <p className="text-3xl md:text-4xl font-bold mb-1">{format(nextMatch.dateTime, 'HH:mm')}</p>
+           {/* Use the original time string directly */}
+           <p className="text-3xl md:text-4xl font-bold mb-1">{nextMatch.time}</p>
            <p className="text-sm md:text-base font-medium capitalize">{format(nextMatch.dateTime, 'eee d MMM', { locale: fr })}</p>
            {nextMatch.stadium && (
              <p className="text-xs text-white/70 mt-1 flex items-center justify-center gap-1">
