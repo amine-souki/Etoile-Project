@@ -1,3 +1,5 @@
+'use client'; // Add 'use client' directive
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -15,7 +17,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import React from 'react';
 
-// Define menu items here (moved from app-sidebar)
+// Define menu items here
 const menuItems = [
   { href: '/', label: 'Accueil', icon: Home },
   { href: '/actualites', label: 'Actualités', icon: Newspaper },
@@ -109,6 +111,7 @@ export default function Header() {
                   </>
                 ) : (
                   <Link href={item.href} passHref legacyBehavior>
+                     {/* Removed className={navigationMenuTriggerStyle()} */}
                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                       {item.label}
                     </NavigationMenuLink>
