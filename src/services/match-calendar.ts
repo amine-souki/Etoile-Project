@@ -55,7 +55,7 @@ function parseDateTime(dateStr: string, timeStr: string): Date {
 const mockMatches: Match[] = [
   {
     competition: 'Ligue 1',
-    round: 'Playoffs - Journée 8', // Example round
+    round: 'Journée 28', // Updated round
     dateTime: parseDateTime('04.05.', '15:00'),
     homeTeam: 'Etoile Sahel',
     homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
@@ -125,3 +125,4 @@ export async function getMatchCalendar(competitionFilter?: string): Promise<Matc
   // Sort matches by date
   return matches.sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime());
 }
+
