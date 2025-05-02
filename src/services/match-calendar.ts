@@ -1,4 +1,5 @@
-import { parse } from 'date-fns';
+import { parse, format as formatDate } from 'date-fns';
+import type { Locale } from 'date-fns'; // Import Locale type
 
 /**
  * Represents a match event.
@@ -26,9 +27,9 @@ export interface Match {
   round?: string;
   /** Optional: The name of the stadium or venue. */
   stadium?: string;
-  /** Optional: Date object for simpler date extraction. */
+  /** Optional: Date object for simpler date extraction (derived from dateTime). */
   date: Date;
-  /** Optional: Time string for simpler time extraction. */
+  /** Optional: Time string for simpler time extraction (derived from dateTime). */
   time: string;
 }
 
@@ -54,69 +55,76 @@ function parseDateTime(dateStr: string, timeStr: string): Date {
   }
 }
 
+// Helper function to create Match objects consistently
+const createMatch = (
+    competition: string,
+    round: string,
+    dateStr: string,
+    timeStr: string,
+    homeTeam: string,
+    awayTeam: string,
+    stadium: string,
+    homeLogoUrl?: string,
+    awayLogoUrl?: string
+): Match => {
+    const dt = parseDateTime(dateStr, timeStr);
+    return {
+        competition,
+        round,
+        dateTime: dt,
+        date: dt, // Derive date from dateTime
+        time: timeStr, // Keep original time string
+        homeTeam,
+        homeLogoUrl,
+        awayTeam,
+        awayLogoUrl,
+        stadium,
+        homeScore: null,
+        awayScore: null,
+        status: 'Scheduled',
+    };
+};
+
 
 // Mock data - Filtered to include only the requested upcoming matches and added round/stadium
+// Ensure dateTime is the source of truth for date/time.
 const mockMatches: Match[] = [
-  {
-    competition: 'Ligue 1',
-    round: 'Journée 28', // Corrected round
-    dateTime: parseDateTime('04.05.', '15:00'),
-    date: parseDateTime('04.05.', '15:00'),
-    time: '15:00',
-    homeTeam: 'Etoile Sahel',
-    homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
-    awayTeam: 'Gafsa', // Assuming EGS Gafsa
-    awayLogoUrl: 'https://media.api-sports.io/football/teams/10604.png',
-    stadium: 'Stade Olympique de Sousse', // Example stadium
-    homeScore: null,
-    awayScore: null,
-    status: 'Scheduled',
-  },
-  {
-    competition: 'Ligue 1',
-    round: 'Journée 29', // Updated round sequentially
-    dateTime: parseDateTime('10.05.', '16:00'),
-    date: parseDateTime('10.05.', '16:00'),
-    time: '16:00',
-    homeTeam: 'Club Africain',
-    homeLogoUrl: 'https://media.api-sports.io/football/teams/988.png',
-    awayTeam: 'Etoile Sahel',
-    awayLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
-    stadium: 'Stade Hammadi Agrebi', // Example stadium
-    homeScore: null,
-    awayScore: null,
-    status: 'Scheduled',
-  },
-  {
-    competition: 'Ligue 1',
-    round: 'Journée 30', // Updated round sequentially
-    dateTime: parseDateTime('14.05.', '16:00'),
-    date: parseDateTime('14.05.', '16:00'),
-    time: '16:00',
-    homeTeam: 'Etoile Sahel',
-    homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
-    awayTeam: 'CS Sfaxien',
-    awayLogoUrl: 'https://media.api-sports.io/football/teams/983.png',
-    stadium: 'Stade Olympique de Sousse', // Example stadium
-    homeScore: null,
-    awayScore: null,
-    status: 'Scheduled',
-  },
-  { // Re-added Coupe de Tunisie match vs Stade Tunisien
-    competition: 'Coupe de Tunisie',
-    round: '8èmes de finale', // Added round info
-    dateTime: parseDateTime('17.05.', '16:00'),
-    date: parseDateTime('17.05.', '16:00'),
-    time: '16:00',
-    homeTeam: 'Etoile Sahel',
-    homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
-    awayTeam: 'Stade Tunisien',
-    awayLogoUrl: 'https://media.api-sports.io/football/teams/991.png',
-    stadium: 'Stade Olympique de Sousse', // Example stadium
-    homeScore: null,
-    awayScore: null,
-    status: 'Scheduled',
-  },
+  createMatch(
+    'Ligue 1',
+    'Journée 28',
+    '04.05.', '15:00',
+    'Etoile Sahel', 'Gafsa',
+    'Stade Olympique de Sousse',
+    'https://media.api-sports.io/football/teams/990.png',
+    'https://media.api-sports.io/football/teams/10604.png'
+  ),
+  createMatch(
+    'Ligue 1',
+    'Journée 29',
+    '10.05.', '16:00',
+    'Club Africain', 'Etoile Sahel',
+    'Stade Hammadi Agrebi',
+    'https://media.api-sports.io/football/teams/988.png',
+    'https://media.api-sports.io/football/teams/990.png'
+  ),
+  createMatch(
+    'Ligue 1',
+    'Journée 30',
+    '14.05.', '16:00',
+    'Etoile Sahel', 'CS Sfaxien',
+    'Stade Olympique de Sousse',
+    'https://media.api-sports.io/football/teams/990.png',
+    'https://media.api-sports.io/football/teams/983.png'
+  ),
+  createMatch( // Re-added Coupe de Tunisie match vs Stade Tunisien
+    'Coupe de Tunisie',
+    '8èmes de finale',
+    '17.05.', '16:00',
+    'Etoile Sahel', 'Stade Tunisien',
+    'Stade Olympique de Sousse',
+    'https://media.api-sports.io/football/teams/990.png',
+    'https://media.api-sports.io/football/teams/991.png'
+  ),
 ];
 
 /**
@@ -134,11 +142,12 @@ export async function getMatchCalendar(competitionFilter?: string): Promise<Matc
     matches = matches.filter(match => match.competition === competitionFilter);
   }
 
-  // Ensure date and time are correctly populated if dateTime exists
+  // Ensure date and time are correctly populated from dateTime
+  // This is now handled in createMatch, but keep as a safeguard if data comes from API
   matches.forEach(match => {
-     if (match.dateTime && (!match.date || !match.time)) {
+     if (!match.date || !match.time) {
        match.date = match.dateTime;
-       match.time = format(match.dateTime, 'HH:mm');
+       match.time = formatDate(match.dateTime, 'HH:mm');
      }
   });
 
@@ -148,38 +157,10 @@ export async function getMatchCalendar(competitionFilter?: string): Promise<Matc
 }
 
 // Helper function (already in your date-fns import)
-function format(date: Date, formatStr: string, options?: { locale?: Locale }): string {
-  return require('date-fns').format(date, formatStr, options);
-}
+// Using named import 'formatDate' to avoid conflict with variable 'format' if used elsewhere
+// function format(date: Date, formatStr: string, options?: { locale?: Locale }): string {
+//   return formatDate(date, formatStr, options);
+// }
 
 // Define Locale type if not already globally available (or import from date-fns)
-interface Locale {
-  code?: string;
-  formatDistance?: (...args: any[]) => any;
-  formatRelative?: (...args: any[]) => any;
-  localize?: {
-    ordinalNumber: (...args: any[]) => any;
-    era: (...args: any[]) => any;
-    quarter: (...args: any[]) => any;
-    month: (...args: any[]) => any;
-    day: (...args: any[]) => any;
-    dayPeriod: (...args: any[]) => any;
-  };
-  formatLong?: {
-    date: (...args: any[]) => any;
-    time: (...args: any[]) => any;
-    dateTime: (...args: any[]) => any;
-  };
-  match?: {
-    ordinalNumber: (...args: any[]) => any;
-    era: (...args: any[]) => any;
-    quarter: (...args: any[]) => any;
-    month: (...args: any[]) => any;
-    day: (...args: any[]) => any;
-    dayPeriod: (...args: any[]) => any;
-  };
-  options?: {
-    weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
-    firstWeekContainsDate?: 1 | 4;
-  };
-}
+// interface Locale { ... } // Kept for reference, assuming it's available via import
