@@ -34,6 +34,12 @@ const nextConfig: NextConfig = {
         hostname: 'media.api-sports.io', // Added for league table logos
         port: '',
         pathname: '/**',
+      },
+      { // Added for history page image
+        protocol: 'https',
+        hostname: 'publish-p47754-e237306.adobeaemcloud.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
