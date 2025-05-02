@@ -3,6 +3,8 @@ import { Landmark, Trophy, Users, Clock, CalendarCheck } from 'lucide-react';
 import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button'; // Added Button
+import Link from 'next/link'; // Added Link
 
 export const metadata = {
   title: 'Histoire du Club - Etoile Sportive Du Sahel',
@@ -94,24 +96,52 @@ export default function HistoryPage() {
       </section>
 
 
-      {/* Palmarès Section */}
-      <section className="container mx-auto px-4 py-12">
-        <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold flex items-center justify-center gap-2">
-                <Trophy className="h-8 w-8 text-accent" /> Palmarès du Club
-            </h2>
-            <p className="text-muted-foreground mt-2">Un héritage de victoires et de trophées.</p>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
-          {historyData.trophies.map((trophy) => (
-            <div key={trophy.name} className="flex flex-col items-center text-center p-4 border rounded-lg bg-card shadow-sm hover:shadow-md transition-shadow duration-200">
-               <trophy.icon className="h-10 w-10 text-primary mb-3" />
-               <p className="font-bold text-xl text-foreground">{trophy.count}</p>
-               <p className="text-xs text-muted-foreground mt-1 leading-tight">{trophy.name}</p>
+       {/* Palmarès Section - New Design */}
+       <section className="container mx-auto px-4 py-12">
+         <div className="text-center mb-8">
+             <h2 className="text-3xl font-bold flex items-center justify-center gap-2">
+                 <Trophy className="h-8 w-8 text-accent" /> Palmarès du Club
+             </h2>
+             <p className="text-muted-foreground mt-2">Un héritage de victoires et de trophées.</p>
+         </div>
+         <Card className="overflow-hidden shadow-lg border">
+            <div className="grid grid-cols-1 md:grid-cols-2">
+                {/* Left Column - Image */}
+                <div className="relative h-64 md:h-auto">
+                    <Image
+                        src="https://picsum.photos/600/400?random=80" // Placeholder for trophy cabinet image
+                        alt="Palmarès ESS - Trophées"
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-t-lg md:rounded-l-lg md:rounded-tr-none"
+                        data-ai-hint="trophy cabinet football"
+                    />
+                </div>
+                {/* Right Column - Trophy List */}
+                <div className="p-6 md:p-8">
+                    {/* Optional: Filter Buttons (Omitted for now) */}
+                    {/* <div className="flex gap-2 mb-6">
+                        <Button size="sm">Football</Button>
+                        <Button size="sm" variant="outline">Basket-ball</Button>
+                    </div> */}
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-8">
+                        {historyData.trophies.map((trophy) => (
+                            <div key={trophy.name} className="flex items-start gap-3">
+                                <trophy.icon className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                                <div>
+                                    <p className="text-3xl font-bold text-foreground">{trophy.count}</p>
+                                    <p className="text-sm text-muted-foreground mt-1">{trophy.name}</p>
+                                    <div className="w-10 h-0.5 bg-primary mt-1.5"></div> {/* Decorative line */}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                     {/* Optional: Link to full list (Omitted for now) */}
+                    {/* <Button variant="link" className="mt-6 p-0 text-primary">Voir le palmarès complet</Button> */}
+                </div>
             </div>
-          ))}
-        </div>
-      </section>
+         </Card>
+       </section>
 
 
       {/* Key Moments Timeline Section */}
