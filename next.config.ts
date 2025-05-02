@@ -40,6 +40,12 @@ const nextConfig: NextConfig = {
         hostname: 'publish-p47754-e237306.adobeaemcloud.com',
         port: '',
         pathname: '/**',
+      },
+      { // Added for player images
+        protocol: 'https',
+        hostname: 'scontent.ftun19-1.fna.fbcdn.net',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
