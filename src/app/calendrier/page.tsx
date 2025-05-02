@@ -1,22 +1,48 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getMatchCalendar, Match } from '@/services/match-calendar';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { CalendarDays, Clock, MapPin, Trophy } from 'lucide-react'; // Removed CheckCircle and Versus
+import { CalendarDays, Pin, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import Image from 'next/image';
+import Link from 'next/link';
+import { TunisiaFlag } from '@/components/tunisia-flag'; // Import the flag component
 
 export const metadata = {
   title: 'Calendrier des Matchs - Etoile Sportive Du Sahel',
 };
 
+// Helper to group matches by competition
+const groupMatchesByCompetition = (matches: Match[]): { [key: string]: Match[] } => {
+  return matches.reduce((acc, match) => {
+    const competition = match.competition;
+    if (!acc[competition]) {
+      acc[competition] = [];
+    }
+    acc[competition].push(match);
+    return acc;
+  }, {} as { [key: string]: Match[] });
+};
+
 export default async function CalendarPage() {
   const matches = await getMatchCalendar();
+  const groupedMatches = groupMatchesByCompetition(matches);
 
-  // Sort matches by date, most recent first for past matches, earliest first for upcoming
-  const sortedMatches = matches.sort((a, b) => b.date.getTime() - a.date.getTime());
-  const upcomingMatches = sortedMatches.filter(match => match.date >= new Date()).reverse();
-  const pastMatches = sortedMatches.filter(match => match.date < new Date());
+  // Define team logo URLs (using existing data)
+  const teamLogos: { [key: string]: string } = {
+      'Etoile Sahel': 'https://media.api-sports.io/football/teams/990.png',
+      'Gafsa': 'https://media.api-sports.io/football/teams/10604.png', // EGS Gafsa
+      'Club Africain': 'https://media.api-sports.io/football/teams/988.png',
+      'CS Sfaxien': 'https://media.api-sports.io/football/teams/983.png',
+      'Stade Tunisien': 'https://media.api-sports.io/football/teams/991.png',
+      'ES Tunis': 'https://media.api-sports.io/football/teams/980.png',
+      'US Monastir': 'https://media.api-sports.io/football/teams/992.png',
+      // Add more logos as needed
+  };
+
+  const getLogo = (teamName: string): string => {
+     return teamLogos[teamName] || 'https://picsum.photos/20/20'; // Fallback logo
+  }
 
   return (
     <div className="space-y-8">
@@ -25,74 +51,78 @@ export default async function CalendarPage() {
         <h1 className="text-3xl font-bold">Calendrier des Matchs</h1>
       </div>
 
-      {/* Upcoming Matches */}
-      {upcomingMatches.length > 0 && (
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Matchs à venir</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {upcomingMatches.map((match, index) => (
-              <Card key={`upcoming-${index}`} className="shadow-sm hover:shadow-md transition-shadow">
-                <CardHeader className="bg-muted/50 rounded-t-lg p-4">
-                  <CardTitle className="text-lg flex items-center justify-between">
-                    <span className="flex items-center gap-2">
-                      <CalendarDays className="h-5 w-5 text-primary" />
-                      {format(match.date, 'eeee d MMMM yyyy', { locale: fr })}
+      {Object.entries(groupedMatches).map(([competition, competitionMatches]) => (
+        <Card key={competition} className="shadow-sm hover:shadow-md transition-shadow">
+          <CardHeader className="bg-muted/50 rounded-t-lg p-3 flex flex-row items-center justify-between">
+             <div className="flex items-center gap-2">
+                <Star className="h-4 w-4 text-yellow-500" /> {/* Added Star */}
+                <TunisiaFlag className="h-4 w-auto" />
+                <CardTitle className="text-sm font-semibold flex items-center gap-1">
+                   TUNISIE: {competition}
+                   <Pin className="h-4 w-4 text-muted-foreground" /> {/* Added Pin */}
+                </CardTitle>
+             </div>
+             <Link href={competition === 'Ligue 1' ? '/sections/football/classement' : '#'} className="text-xs text-primary hover:underline">
+                {competition === 'Ligue 1' ? 'Classement' : 'Tableau'}
+             </Link>
+          </CardHeader>
+          <CardContent className="p-0">
+            {competitionMatches.map((match, index) => (
+              <div key={index} className="grid grid-cols-12 items-center p-3 border-b last:border-b-0 hover:bg-muted/20 transition-colors duration-150 text-sm">
+                 {/* Date and Time */}
+                 <div className="col-span-2 text-muted-foreground text-xs flex flex-col items-center text-center">
+                    <Star className="h-4 w-4 mb-1 text-gray-400" /> {/* Placeholder star */}
+                    <span>{format(match.dateTime, 'dd.MM.')}</span>
+                    <span>{format(match.dateTime, 'HH:mm')}</span>
+                 </div>
+
+                 {/* Home Team */}
+                 <div className="col-span-4 flex items-center justify-end gap-2">
+                    <span className={`font-medium ${match.homeTeam === 'Etoile Sahel' ? 'font-bold' : ''}`}>
+                        {match.homeTeam}
                     </span>
-                    <Badge variant="secondary">{match.competition}</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 space-y-2">
-                  <div className="flex items-center justify-center text-xl font-medium gap-4">
-                      <span>Etoile du Sahel</span>
-                       {/* Replace Versus icon with simple text */}
-                       <span className="text-muted-foreground">vs</span>
-                      <span>{match.opponent}</span>
-                  </div>
-                   <Separator />
-                   <div className="text-sm text-muted-foreground space-y-1">
-                      <p className="flex items-center gap-2"><Clock className="h-4 w-4" /> Heure: {match.time}</p>
-                      <p className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Stade: {match.stadium}</p>
-                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-      )}
+                    <Image
+                      src={getLogo(match.homeTeam)}
+                      alt={`${match.homeTeam} logo`}
+                      width={16}
+                      height={16}
+                      className="object-contain"
+                      data-ai-hint="football team logo"
+                    />
+                 </div>
 
-      {/* Past Matches */}
-      {pastMatches.length > 0 && (
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Résultats Passés</h2>
-          <div className="space-y-4">
-            {pastMatches.map((match, index) => (
-              <Card key={`past-${index}`} className="shadow-sm">
-                <CardContent className="p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                  <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
-                     <div className="text-sm text-muted-foreground">
-                         <p className="flex items-center gap-1"><CalendarDays className="h-4 w-4" /> {format(match.date, 'dd/MM/yy', { locale: fr })}</p>
-                         <p className="flex items-center gap-1"><Clock className="h-4 w-4" /> {match.time}</p>
-                     </div>
-                     <Separator orientation="vertical" className="hidden md:block h-10 self-center" />
-                     <div className="flex items-center gap-2 md:gap-4 font-medium text-lg">
-                          <span>Etoile du Sahel</span>
-                          <Badge variant={match.score && parseInt(match.score.split('-')[0]) > parseInt(match.score.split('-')[1]) ? "default" : (match.score && parseInt(match.score.split('-')[0]) < parseInt(match.score.split('-')[1]) ? "destructive" : "secondary")} className="text-lg px-3 py-1">
-                              {match.score || '-'}
-                          </Badge>
-                          <span>{match.opponent}</span>
-                     </div>
-                  </div>
+                 {/* Score / Separator */}
+                 <div className="col-span-2 text-center font-semibold text-muted-foreground">
+                    {match.status === 'Finished' ? (
+                        <Badge variant={ (match.homeScore ?? 0) > (match.awayScore ?? 0) ? (match.homeTeam === 'Etoile Sahel' ? 'default' : 'destructive') : ( (match.homeScore ?? 0) < (match.awayScore ?? 0) ? (match.awayTeam === 'Etoile Sahel' ? 'default' : 'destructive') : 'secondary')}
+                               className="px-2 py-0.5 text-xs">
+                          {match.homeScore} - {match.awayScore}
+                        </Badge>
+                    ) : (
+                      <span>-</span>
+                    )}
+                 </div>
 
-                  <div className="text-sm text-muted-foreground text-center md:text-right space-y-1">
-                    <p className="flex items-center justify-center md:justify-end gap-1"><Trophy className="h-4 w-4" /> {match.competition}</p>
-                    <p className="flex items-center justify-center md:justify-end gap-1"><MapPin className="h-4 w-4" /> {match.stadium}</p>
-                  </div>
-                </CardContent>
-              </Card>
+                 {/* Away Team */}
+                 <div className="col-span-4 flex items-center gap-2">
+                    <Image
+                      src={getLogo(match.awayTeam)}
+                      alt={`${match.awayTeam} logo`}
+                      width={16}
+                      height={16}
+                      className="object-contain"
+                       data-ai-hint="football team logo"
+                    />
+                     <span className={`font-medium ${match.awayTeam === 'Etoile Sahel' ? 'font-bold' : ''}`}>
+                        {match.awayTeam}
+                    </span>
+                 </div>
+
+              </div>
             ))}
-          </div>
-        </section>
-      )}
+          </CardContent>
+        </Card>
+      ))}
 
        {matches.length === 0 && (
          <p className="text-center text-muted-foreground">Aucun match programmé ou joué récemment.</p>
