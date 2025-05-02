@@ -13,8 +13,8 @@ import {
   ShoppingCart,
   Ticket,
   Swords,
-  Hand, // Changed from Handball
-  Dribbble, // Changed from Basketball
+  Hand,
+  Dribbble,
   Volleyball,
 } from 'lucide-react';
 import {
@@ -65,7 +65,7 @@ export default function AppSidebar() {
   const isParentActive = (subItems?: typeof menuItems[0]['subItems']) => {
      if (!subItems) return false;
      return subItems.some(item => pathname.startsWith(item.href));
-  }
+  }; // Added semicolon
 
   return (
     <Sidebar side="left" collapsible="icon" className="border-r">
@@ -87,7 +87,6 @@ export default function AppSidebar() {
                     <SidebarMenuSub>
                       {item.subItems.map((subItem) => (
                         <li key={subItem.href}>
-                         {/* Removed legacyBehavior */}
                          <Link href={subItem.href} passHref>
                           <SidebarMenuSubButton
                             isActive={pathname === subItem.href}
@@ -104,7 +103,6 @@ export default function AppSidebar() {
                  </>
 
               ) : (
-                 {/* Removed legacyBehavior */}
                 <Link href={item.href} passHref>
                   <SidebarMenuButton
                     isActive={pathname === item.href}
