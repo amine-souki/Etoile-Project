@@ -176,83 +176,86 @@ export default function HistoryPage() {
             <div className="flex-1 rm-palmares__container">
                 <Card className="shadow-lg border rounded-lg overflow-hidden">
                     <CardContent className="p-6 md:p-8">
-                        {/* Tabs and Link Row */}
-                        <div className="rm-palmares__nav flex justify-between items-center mb-6 border-b pb-4">
-                            <Tabs defaultValue="football" className="rm-palmares__tabs">
-                                <TabsList className="bg-transparent p-0 gap-2">
-                                    <TabsTrigger value="football" className="rm-tabs__pill rm-tabs__pill--x-small rm-tabs__pill--selected data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs">Football</TabsTrigger>
-                                    <TabsTrigger value="handball" className="rm-tabs__pill rm-tabs__pill--x-small data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs border border-border">Handball</TabsTrigger>
-                                    <TabsTrigger value="basketball" className="rm-tabs__pill rm-tabs__pill--x-small data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs border border-border">Basket-ball</TabsTrigger>
-                                    <TabsTrigger value="volleyball" className="rm-tabs__pill rm-tabs__pill--x-small data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs border border-border">Volley-ball</TabsTrigger>
-                                </TabsList>
-                                {/* Placeholder Content for other sports - TODO: Add actual content */}
-                                <TabsContent value="handball"><p className="text-muted-foreground p-4 text-center">Palmarès Handball bientôt disponible.</p></TabsContent>
-                                <TabsContent value="basketball"><p className="text-muted-foreground p-4 text-center">Palmarès Basket-ball bientôt disponible.</p></TabsContent>
-                                <TabsContent value="volleyball"><p className="text-muted-foreground p-4 text-center">Palmarès Volley-ball bientôt disponible.</p></TabsContent>
-                            </Tabs>
-                             <Button variant="link" size="sm" className="rm-palmares__button text-xs text-primary hover:underline p-0 h-auto">
-                                Voir le palmarès complet
-                             </Button>
-                        </div>
-
-                         {/* Trophy List Columns */}
-                         <TabsContent value="football"> {/* Wrap football content in TabsContent */}
-                           <div className="rm-palmares__content grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                             {/* Column 1 */}
-                             <ol className="rm-palmares__list space-y-5">
-                                {leftTrophies.map((trophy) => (
-                                   <li key={trophy.name} className="rm-palmares__item">
-                                      <div className="rm-bar flex flex-col group" title={`${trophy.currentCount} (${trophy.years})`}>
-                                          <div className="rm-bar__content flex items-center gap-3 mb-1">
-                                              <trophy.icon className="rm-bar__icon h-6 w-6 text-accent flex-shrink-0" />
-                                              <span className="rm-bar__number text-lg font-bold text-foreground">{trophy.currentCount}</span>
-                                               <p className="rm-palmares__name text-sm font-medium text-muted-foreground truncate flex-1">{trophy.name}</p>
-                                          </div>
-                                          {/* Dynamic Progress Bar */}
-                                          <div className="rm-bar__bg h-1 w-full bg-muted rounded-full overflow-hidden ml-9">
-                                              <div className="rm-bar__progress h-full bg-primary rounded-full transition-all duration-300 group-hover:bg-accent" style={{ width: `${trophy.percentage}%` }}></div>
-                                          </div>
-                                      </div>
-                                   </li>
-                                ))}
-                             </ol>
-                             {/* Column 2 */}
-                             <ol className="rm-palmares__list space-y-5">
-                                {rightTrophies.map((trophy) => (
-                                   <li key={trophy.name} className="rm-palmares__item">
-                                      <div className="rm-bar flex flex-col group" title={`${trophy.currentCount} (${trophy.years})`}>
-                                          <div className="rm-bar__content flex items-center gap-3 mb-1">
-                                              <trophy.icon className="rm-bar__icon h-6 w-6 text-accent flex-shrink-0" />
-                                              <span className="rm-bar__number text-lg font-bold text-foreground">{trophy.currentCount}</span>
-                                               <p className="rm-palmares__name text-sm font-medium text-muted-foreground truncate flex-1">{trophy.name}</p>
-                                          </div>
-                                          {/* Dynamic Progress Bar */}
-                                          <div className="rm-bar__bg h-1 w-full bg-muted rounded-full overflow-hidden ml-9">
-                                              <div className="rm-bar__progress h-full bg-primary rounded-full transition-all duration-300 group-hover:bg-accent" style={{ width: `${trophy.percentage}%` }}></div>
-                                          </div>
-                                      </div>
-                                   </li>
-                                ))}
-                             </ol>
+                         {/* Wrap Tabs and Content */}
+                         <Tabs defaultValue="football" className="w-full">
+                           {/* Tabs and Link Row */}
+                           <div className="rm-palmares__nav flex justify-between items-center mb-6 border-b pb-4">
+                               <TabsList className="rm-palmares__tabs bg-transparent p-0 gap-2">
+                                     <TabsTrigger value="football" className="rm-tabs__pill rm-tabs__pill--x-small rm-tabs__pill--selected data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs">Football</TabsTrigger>
+                                     <TabsTrigger value="handball" className="rm-tabs__pill rm-tabs__pill--x-small data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs border border-border">Handball</TabsTrigger>
+                                     <TabsTrigger value="basketball" className="rm-tabs__pill rm-tabs__pill--x-small data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs border border-border">Basket-ball</TabsTrigger>
+                                     <TabsTrigger value="volleyball" className="rm-tabs__pill rm-tabs__pill--x-small data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs border border-border">Volley-ball</TabsTrigger>
+                               </TabsList>
+                               <Button variant="link" size="sm" className="rm-palmares__button text-xs text-primary hover:underline p-0 h-auto">
+                                   Voir le palmarès complet
+                               </Button>
                            </div>
 
-                           {/* Footer - Range Slider */}
-                           <div className="rm-palmares__footer mt-8 pt-6 border-t">
-                              <div className="rm-palmares__control rm-range flex items-center gap-4">
-                                   <Slider
-                                       id="palmaresYearSlider"
-                                       min={historyData.foundationYear}
-                                       max={currentYear}
-                                       step={1}
-                                       value={[selectedYear]} // Controlled component value
-                                       onValueChange={handleSliderChange} // Use the handler
-                                       className="flex-grow"
-                                       aria-label="Année du palmarès"
-                                   />
-                                   <span className="rm-range__value text-sm font-medium text-foreground w-12 text-right">{selectedYear}</span>
-                              </div>
-                           </div>
-                         </TabsContent> {/* End Football TabsContent */}
+                           {/* Trophy List Columns */}
+                           <TabsContent value="football">
+                             <div className="rm-palmares__content grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                               {/* Column 1 */}
+                               <ol className="rm-palmares__list space-y-5">
+                                  {leftTrophies.map((trophy) => (
+                                     <li key={trophy.name} className="rm-palmares__item">
+                                        <div className="rm-bar flex flex-col group" title={`${trophy.currentCount} (${trophy.years})`}>
+                                            <div className="rm-bar__content flex items-center gap-3 mb-1">
+                                                <trophy.icon className="rm-bar__icon h-6 w-6 text-accent flex-shrink-0" />
+                                                <span className="rm-bar__number text-lg font-bold text-foreground">{trophy.currentCount}</span>
+                                                 <p className="rm-palmares__name text-sm font-medium text-muted-foreground truncate flex-1">{trophy.name}</p>
+                                            </div>
+                                            {/* Dynamic Progress Bar */}
+                                            <div className="rm-bar__bg h-1 w-full bg-muted rounded-full overflow-hidden ml-9">
+                                                <div className="rm-bar__progress h-full bg-primary rounded-full transition-all duration-300 group-hover:bg-accent" style={{ width: `${trophy.percentage}%` }}></div>
+                                            </div>
+                                        </div>
+                                     </li>
+                                  ))}
+                               </ol>
+                               {/* Column 2 */}
+                               <ol className="rm-palmares__list space-y-5">
+                                  {rightTrophies.map((trophy) => (
+                                     <li key={trophy.name} className="rm-palmares__item">
+                                        <div className="rm-bar flex flex-col group" title={`${trophy.currentCount} (${trophy.years})`}>
+                                            <div className="rm-bar__content flex items-center gap-3 mb-1">
+                                                <trophy.icon className="rm-bar__icon h-6 w-6 text-accent flex-shrink-0" />
+                                                <span className="rm-bar__number text-lg font-bold text-foreground">{trophy.currentCount}</span>
+                                                 <p className="rm-palmares__name text-sm font-medium text-muted-foreground truncate flex-1">{trophy.name}</p>
+                                            </div>
+                                            {/* Dynamic Progress Bar */}
+                                            <div className="rm-bar__bg h-1 w-full bg-muted rounded-full overflow-hidden ml-9">
+                                                <div className="rm-bar__progress h-full bg-primary rounded-full transition-all duration-300 group-hover:bg-accent" style={{ width: `${trophy.percentage}%` }}></div>
+                                            </div>
+                                        </div>
+                                     </li>
+                                  ))}
+                               </ol>
+                             </div>
+
+                             {/* Footer - Range Slider */}
+                             <div className="rm-palmares__footer mt-8 pt-6 border-t">
+                                <div className="rm-palmares__control rm-range flex items-center gap-4">
+                                     <Slider
+                                         id="palmaresYearSlider"
+                                         min={historyData.foundationYear}
+                                         max={currentYear}
+                                         step={1}
+                                         value={[selectedYear]} // Controlled component value
+                                         onValueChange={handleSliderChange} // Use the handler
+                                         className="flex-grow"
+                                         aria-label="Année du palmarès"
+                                     />
+                                     <span className="rm-range__value text-sm font-medium text-foreground w-12 text-right">{selectedYear}</span>
+                                </div>
+                             </div>
+                           </TabsContent>
+
+                           {/* Placeholder Content for other sports */}
+                           <TabsContent value="handball"><p className="text-muted-foreground p-4 text-center">Palmarès Handball bientôt disponible.</p></TabsContent>
+                           <TabsContent value="basketball"><p className="text-muted-foreground p-4 text-center">Palmarès Basket-ball bientôt disponible.</p></TabsContent>
+                           <TabsContent value="volleyball"><p className="text-muted-foreground p-4 text-center">Palmarès Volley-ball bientôt disponible.</p></TabsContent>
+
+                         </Tabs> {/* End Tabs Wrapper */}
                     </CardContent>
                 </Card>
             </div>
@@ -349,4 +352,3 @@ export default function HistoryPage() {
     </div>
   );
 }
-
