@@ -59,7 +59,11 @@ export default {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
-  			}
+  			},
+             // Added for league table form badges
+             'green-500': '#22c55e',
+             'yellow-500': '#eab308',
+             'red-500': '#ef4444',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

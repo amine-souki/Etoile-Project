@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Menu, Home, Newspaper, CalendarDays, Image as ImageIcon, Users, GraduationCap, Landmark, ShoppingCart, Ticket, Swords, Hand, Dribbble, Volleyball } from 'lucide-react';
+import { Menu, Home, Newspaper, CalendarDays, Image as ImageIcon, Users, GraduationCap, Landmark, ShoppingCart, Ticket, Swords, Hand, Dribbble, Volleyball, BarChart3 } from 'lucide-react'; // Added BarChart3
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -27,10 +27,11 @@ const menuItems = [
     label: 'Sections Sportives',
     icon: Swords,
     subItems: [
-      { href: '/sections/football', label: 'Football', icon: Swords },
-      { href: '/sections/handball', label: 'Handball', icon: Hand },
-      { href: '/sections/basketball', label: 'Basketball', icon: Dribbble },
-      { href: '/sections/volleyball', label: 'Volleyball', icon: Volleyball },
+      { href: '/sections/football', label: 'Football', icon: Swords, description: "L'équipe première, résultats et actualités." },
+      { href: '/sections/handball', label: 'Handball', icon: Hand, description: 'Section handball de l\'ESS.' },
+      { href: '/sections/basketball', label: 'Basketball', icon: Dribbble, description: 'Section basketball de l\'ESS.' },
+      { href: '/sections/volleyball', label: 'Volleyball', icon: Volleyball, description: 'Section volleyball de l\'ESS.' },
+      { href: '/sections/football/classement', label: 'Classement Football', icon: BarChart3, description: 'Voir le classement de la Ligue 1.' }, // Added Classement
     ],
   },
   { href: '/academie', label: 'Académie', icon: GraduationCap },
@@ -43,8 +44,8 @@ const menuItems = [
 // ListItem component for NavigationMenu dropdowns
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<"a"> & { icon?: React.ElementType }
+>(({ className, title, icon: Icon, children, ...props }, ref) => {
   return (
     <li>
       <NavigationMenuLink asChild>
@@ -56,8 +57,11 @@ const ListItem = React.forwardRef<
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+         <div className="flex items-center gap-2">
+            {Icon && <Icon className="h-4 w-4 text-primary" />}
+            <div className="text-sm font-medium leading-none">{title}</div>
+         </div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground pl-6"> {/* Indent description */}
             {children}
           </p>
         </a>
@@ -80,6 +84,7 @@ export default function Header() {
             width={40}
             height={40}
             className="object-contain"
+            data-ai-hint="club logo"
           />
           <span className="hidden font-bold sm:inline-block text-lg text-primary">
             Etoile Sportive Du Sahel
@@ -102,8 +107,9 @@ export default function Header() {
                               key={subItem.label}
                               title={subItem.label}
                               href={subItem.href}
+                              icon={subItem.icon}
                            >
-                             {/* Optional: Add description here */}
+                             {subItem.description}
                            </ListItem>
                         ))}
                       </ul>
@@ -111,7 +117,6 @@ export default function Header() {
                   </>
                 ) : (
                   <Link href={item.href} passHref legacyBehavior>
-                     {/* Removed className={navigationMenuTriggerStyle()} */}
                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                       {item.label}
                     </NavigationMenuLink>
@@ -130,7 +135,7 @@ export default function Header() {
               <span className="sr-only">Ouvrir le menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-[300px] sm:w-[400px]">
+          <SheetContent side="left" className="w-[300px] sm:w-[400px] overflow-y-auto"> {/* Added overflow */}
             <nav className="flex flex-col gap-4 mt-8">
                <Link href="/" className="flex items-center gap-2 mb-4">
                  <Image
@@ -139,13 +144,17 @@ export default function Header() {
                    width={30}
                    height={30}
                    className="object-contain"
+                   data-ai-hint="club logo"
                  />
                  <span className="font-bold text-lg text-primary">ESS Live</span>
                </Link>
               {menuItems.map((item) => (
                 item.subItems ? (
-                  <div key={item.label}>
-                     <p className="font-semibold px-2 py-1 text-muted-foreground">{item.label}</p>
+                  <div key={item.label} className="border-t pt-2">
+                     <p className="font-semibold px-2 py-1 text-muted-foreground flex items-center gap-2">
+                        <item.icon className="h-4 w-4" />
+                        {item.label}
+                    </p>
                      <div className="flex flex-col pl-4">
                         {item.subItems.map((subItem) => (
                             <Link

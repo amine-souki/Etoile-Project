@@ -1,8 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, BarChart3, Newspaper, Swords, Hand, Dribbble, Volleyball } from 'lucide-react'; // Changed Handball to Hand
+import { Users, BarChart3, Newspaper, Swords, Hand, Dribbble, Volleyball, ArrowRight } from 'lucide-react'; // Added ArrowRight
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
+import Link from 'next/link'; // Added Link
 import { notFound } from 'next/navigation';
+import { Button } from '@/components/ui/button'; // Added Button
 
 export const dynamicParams = false; // Prevent generation of routes not explicitly listed
 
@@ -34,7 +36,7 @@ const sportData: { [key: string]: any } = {
       { name: 'Yassine Chikhaoui', position: 'Milieu', imageUrl: 'https://picsum.photos/100/100?random=13', dataAiHint: "football player portrait" },
       { name: 'Vinny Bongonga', position: 'Attaquant', imageUrl: 'https://picsum.photos/100/100?random=14', dataAiHint: "football player portrait" },
     ],
-    results: { rank: 1, points: 58, lastMatch: 'Victoire 2-1 vs CA' },
+    results: { rank: 3, points: 57, lastMatch: 'Victoire 2-1 vs CA' }, // Updated Rank
     news: [
       { title: 'Préparation intensive avant le prochain match', date: '18/07/2024' },
       { title: 'Nouveau sponsor maillot annoncé', date: '15/07/2024' },
@@ -75,6 +77,7 @@ export default async function SportSectionPage({ params }: { params: { sport: st
   }
 
   const SportIcon = sportDetails.icon;
+  const isFootball = params.sport.toLowerCase() === 'football';
 
   return (
     <div className="space-y-8">
@@ -112,7 +115,16 @@ export default async function SportSectionPage({ params }: { params: { sport: st
       {/* Results/Ranking Section */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2"><BarChart3 className="h-5 w-5 text-primary" /> Résultats & Classement</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            <span className="flex items-center gap-2"><BarChart3 className="h-5 w-5 text-primary" /> Résultats & Classement</span>
+             {isFootball && (
+               <Button variant="outline" size="sm" asChild>
+                  <Link href="/sections/football/classement">
+                      Voir classement complet <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+               </Button>
+             )}
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
           {sportDetails.results ? (

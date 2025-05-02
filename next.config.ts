@@ -28,6 +28,12 @@ const nextConfig: NextConfig = {
         hostname: 'example.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'media.api-sports.io', // Added for league table logos
+        port: '',
+        pathname: '/**',
       }
     ],
   },
