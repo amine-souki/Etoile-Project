@@ -9,11 +9,11 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center px-4 md:px-6">
         <div className="md:hidden">
-          <SidebarTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Menu />
-              <span className="sr-only">Toggle Sidebar</span>
-            </Button>
+          {/* Removed asChild and nested Button. SidebarTrigger renders its own button. */}
+          <SidebarTrigger>
+             {/* Use Menu icon directly if needed, or rely on SidebarTrigger's default PanelLeft */}
+             {/* <Menu /> */}
+             {/* <span className="sr-only">Toggle Sidebar</span> */}
           </SidebarTrigger>
         </div>
         <Link href="/" className="flex items-center gap-2 mr-6">

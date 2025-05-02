@@ -20,17 +20,14 @@ import {
 import {
   Sidebar,
   SidebarContent,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarFooter,
   useSidebar,
   SidebarMenuSub,
   SidebarMenuSubButton,
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
 import React from 'react';
 
 const menuItems = [
@@ -43,8 +40,8 @@ const menuItems = [
     icon: Swords,
     subItems: [
       { href: '/sections/football', label: 'Football', icon: Swords }, // Re-using Swords for Football
-      { href: '/sections/handball', label: 'Handball', icon: Hand }, // Changed from Handball
-      { href: '/sections/basketball', label: 'Basketball', icon: Dribbble }, // Changed from Basketball
+      { href: '/sections/handball', label: 'Handball', icon: Hand },
+      { href: '/sections/basketball', label: 'Basketball', icon: Dribbble },
       { href: '/sections/volleyball', label: 'Volleyball', icon: Volleyball },
     ],
   },
@@ -90,7 +87,8 @@ export default function AppSidebar() {
                     <SidebarMenuSub>
                       {item.subItems.map((subItem) => (
                         <li key={subItem.href}>
-                         <Link href={subItem.href} passHref legacyBehavior>
+                         {/* Removed legacyBehavior */}
+                         <Link href={subItem.href} passHref>
                           <SidebarMenuSubButton
                             isActive={pathname === subItem.href}
                             onClick={() => setOpenMobile(false)}
@@ -106,7 +104,8 @@ export default function AppSidebar() {
                  </>
 
               ) : (
-                <Link href={item.href} passHref legacyBehavior>
+                 {/* Removed legacyBehavior */}
+                <Link href={item.href} passHref>
                   <SidebarMenuButton
                     isActive={pathname === item.href}
                     onClick={() => setOpenMobile(false)}

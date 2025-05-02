@@ -46,9 +46,9 @@ export default async function Home() {
                 <p className="text-sm">{format(nextMatch.date, 'eeee d MMMM yyyy', { locale: fr })} à {nextMatch.time}</p>
                 <p className="text-sm">{nextMatch.stadium} ({nextMatch.competition})</p>
                  <Button asChild variant="secondary" className="mt-3">
-                    {/* Added legacyBehavior */}
-                    <Link href="/calendrier" legacyBehavior>
-                      <a>Voir Calendrier <ArrowRight className="ml-2 h-4 w-4" /></a>
+                    {/* Removed legacyBehavior */}
+                    <Link href="/calendrier">
+                      Voir Calendrier <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                  </Button>
              </div>
@@ -62,9 +62,9 @@ export default async function Home() {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold flex items-center gap-2"><Newspaper className="text-primary"/> Dernières Actualités</h2>
           <Button variant="outline" asChild>
-             {/* Added legacyBehavior */}
-            <Link href="/actualites" legacyBehavior>
-              <a>Voir tout <ArrowRight className="ml-2 h-4 w-4" /></a>
+             {/* Removed legacyBehavior */}
+            <Link href="/actualites">
+              Voir tout <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
@@ -89,9 +89,9 @@ export default async function Home() {
               <CardContent>
                 <p className="text-sm text-muted-foreground line-clamp-3 mb-4">{item.excerpt}</p>
                 <Button variant="link" asChild className="p-0 h-auto text-primary">
-                   {/* Added legacyBehavior */}
-                  <Link href={item.link} target="_blank" rel="noopener noreferrer" legacyBehavior>
-                    <a>Lire la suite <ArrowRight className="ml-1 h-4 w-4" /></a>
+                   {/* Removed legacyBehavior */}
+                  <Link href={item.link} target="_blank" rel="noopener noreferrer">
+                    Lire la suite <ArrowRight className="ml-1 h-4 w-4" />
                   </Link>
                 </Button>
               </CardContent>
