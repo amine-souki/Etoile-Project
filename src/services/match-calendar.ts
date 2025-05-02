@@ -37,7 +37,9 @@ function parseDateTime(dateStr: string, timeStr: string): Date {
   const fullDateStr = `${dateStr}${currentYear} ${timeStr}`;
   // Parse using the correct format
   try {
-    return parse(fullDateStr, 'dd.MM.yyyy HH:mm', new Date());
+    // Using a base date ensures correct parsing even if the system date is different
+    const baseDate = new Date(`${currentYear}-01-01T00:00:00`);
+    return parse(fullDateStr, 'dd.MM.yyyy HH:mm', baseDate);
   } catch (e) {
     console.error(`Failed to parse date: ${fullDateStr}`, e);
     return new Date(); // Fallback to current date
@@ -45,7 +47,7 @@ function parseDateTime(dateStr: string, timeStr: string): Date {
 }
 
 
-// Mock data based on the provided image
+// Mock data - Filtered to include only the requested upcoming matches
 const mockMatches: Match[] = [
   {
     competition: 'Ligue 1',
@@ -54,8 +56,8 @@ const mockMatches: Match[] = [
     homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
     awayTeam: 'Gafsa', // Assuming EGS Gafsa
     awayLogoUrl: 'https://media.api-sports.io/football/teams/10604.png',
-    homeScore: null, // Not played
-    awayScore: null, // Not played
+    homeScore: null,
+    awayScore: null,
     status: 'Scheduled',
   },
   {
@@ -65,8 +67,8 @@ const mockMatches: Match[] = [
     homeLogoUrl: 'https://media.api-sports.io/football/teams/988.png',
     awayTeam: 'Etoile Sahel',
     awayLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
-    homeScore: null, // Not played
-    awayScore: null, // Not played
+    homeScore: null,
+    awayScore: null,
     status: 'Scheduled',
   },
   {
@@ -76,44 +78,22 @@ const mockMatches: Match[] = [
     homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
     awayTeam: 'CS Sfaxien',
     awayLogoUrl: 'https://media.api-sports.io/football/teams/983.png',
-    homeScore: null, // Not played
-    awayScore: null, // Not played
+    homeScore: null,
+    awayScore: null,
     status: 'Scheduled',
   },
-  {
-    competition: 'Coupe de Tunisie',
-    dateTime: parseDateTime('17.05.', '16:00'),
-    homeTeam: 'Etoile Sahel',
-    homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
-    awayTeam: 'Stade Tunisien',
-    awayLogoUrl: 'https://media.api-sports.io/football/teams/991.png',
-    homeScore: null, // Not played
-    awayScore: null, // Not played
-    status: 'Scheduled',
-  },
-   // Adding past matches from previous mock data for completeness
-   {
-    competition: 'Ligue 1',
-    dateTime: new Date(Date.now() - 86400000 * 5), // Example past date
-    homeTeam: 'Etoile Sahel',
-    homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
-    awayTeam: 'US Monastir',
-    awayLogoUrl: 'https://media.api-sports.io/football/teams/992.png',
-    homeScore: 1,
-    awayScore: 1,
-    status: 'Finished',
-  },
-   {
-    competition: 'Ligue 1',
-    dateTime: new Date(Date.now() - 86400000 * 10), // Example past date
-    homeTeam: 'ES Tunis',
-    homeLogoUrl: 'https://media.api-sports.io/football/teams/980.png',
-    awayTeam: 'Etoile Sahel',
-    awayLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
-    homeScore: 2,
-    awayScore: 0,
-    status: 'Finished',
-  }
+  // { // Removed Coupe de Tunisie match vs Stade Tunisien as per request
+  //   competition: 'Coupe de Tunisie',
+  //   dateTime: parseDateTime('17.05.', '16:00'),
+  //   homeTeam: 'Etoile Sahel',
+  //   homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
+  //   awayTeam: 'Stade Tunisien',
+  //   awayLogoUrl: 'https://media.api-sports.io/football/teams/991.png',
+  //   homeScore: null,
+  //   awayScore: null,
+  //   status: 'Scheduled',
+  // },
+  // Removed past matches vs US Monastir and ES Tunis
 ];
 
 /**
@@ -125,12 +105,12 @@ const mockMatches: Match[] = [
 export async function getMatchCalendar(competitionFilter?: string): Promise<Match[]> {
   // TODO: Implement this by calling an API.
 
-  let matches = mockMatches;
+  let matches = mockMatches; // Use the already filtered list
 
   if (competitionFilter) {
     matches = matches.filter(match => match.competition === competitionFilter);
   }
 
-  // Sort matches by date
+  // Sort matches by date (already sorted in mock data, but good practice)
   return matches.sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime());
 }

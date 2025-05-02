@@ -2,17 +2,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getMatchCalendar, Match } from '@/services/match-calendar';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { CalendarDays, Pin, Star } from 'lucide-react';
+import { CalendarDays, Pin, Star } from 'lucide-react'; // Star is kept for header, removed from rows
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import Link from 'next/link';
-import { TunisiaFlag } from '@/components/tunisia-flag'; // Import the flag component
+// Removed TunisiaFlag import
 
 export const metadata = {
   title: 'Calendrier des Matchs - Etoile Sportive Du Sahel',
 };
 
-// Helper to group matches by competition
+// Helper to group matches by competition remains the same
 const groupMatchesByCompetition = (matches: Match[]): { [key: string]: Match[] } => {
   return matches.reduce((acc, match) => {
     const competition = match.competition;
@@ -25,6 +25,7 @@ const groupMatchesByCompetition = (matches: Match[]): { [key: string]: Match[] }
 };
 
 export default async function CalendarPage() {
+  // Fetch the filtered matches from the service
   const matches = await getMatchCalendar();
   const groupedMatches = groupMatchesByCompetition(matches);
 
@@ -35,6 +36,7 @@ export default async function CalendarPage() {
       'Club Africain': 'https://media.api-sports.io/football/teams/988.png',
       'CS Sfaxien': 'https://media.api-sports.io/football/teams/983.png',
       'Stade Tunisien': 'https://media.api-sports.io/football/teams/991.png',
+      // ES Tunis and US Monastir removed as per request, but kept here for potential future use
       'ES Tunis': 'https://media.api-sports.io/football/teams/980.png',
       'US Monastir': 'https://media.api-sports.io/football/teams/992.png',
       // Add more logos as needed
@@ -55,11 +57,11 @@ export default async function CalendarPage() {
         <Card key={competition} className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="bg-muted/50 rounded-t-lg p-3 flex flex-row items-center justify-between">
              <div className="flex items-center gap-2">
-                <Star className="h-4 w-4 text-yellow-500" /> {/* Added Star */}
-                <TunisiaFlag className="h-4 w-auto" />
+                {/* <Star className="h-4 w-4 text-yellow-500" /> */} {/* Star icon can be kept or removed based on desired header style */}
+                {/* Removed TunisiaFlag component */}
                 <CardTitle className="text-sm font-semibold flex items-center gap-1">
-                   TUNISIE: {competition}
-                   <Pin className="h-4 w-4 text-muted-foreground" /> {/* Added Pin */}
+                   {competition} {/* Removed "TUNISIE:" */}
+                   <Pin className="h-4 w-4 text-muted-foreground" />
                 </CardTitle>
              </div>
              <Link href={competition === 'Ligue 1' ? '/sections/football/classement' : '#'} className="text-xs text-primary hover:underline">
@@ -71,7 +73,7 @@ export default async function CalendarPage() {
               <div key={index} className="grid grid-cols-12 items-center p-3 border-b last:border-b-0 hover:bg-muted/20 transition-colors duration-150 text-sm">
                  {/* Date and Time */}
                  <div className="col-span-2 text-muted-foreground text-xs flex flex-col items-center text-center">
-                    <Star className="h-4 w-4 mb-1 text-gray-400" /> {/* Placeholder star */}
+                    {/* Removed Star icon */}
                     <span>{format(match.dateTime, 'dd.MM.')}</span>
                     <span>{format(match.dateTime, 'HH:mm')}</span>
                  </div>
@@ -99,7 +101,7 @@ export default async function CalendarPage() {
                           {match.homeScore} - {match.awayScore}
                         </Badge>
                     ) : (
-                      <span>-</span>
+                      <span>-</span> // Show dash for scheduled games
                     )}
                  </div>
 
@@ -125,7 +127,7 @@ export default async function CalendarPage() {
       ))}
 
        {matches.length === 0 && (
-         <p className="text-center text-muted-foreground">Aucun match programmé ou joué récemment.</p>
+         <p className="text-center text-muted-foreground">Aucun match programmé.</p>
        )}
     </div>
   );
