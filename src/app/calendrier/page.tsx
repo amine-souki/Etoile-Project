@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { getMatchCalendar, Match } from '@/services/match-calendar';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { CalendarDays, CheckCircle, Clock, MapPin, Trophy, Versus } from 'lucide-react';
+import { CalendarDays, Clock, MapPin, Trophy } from 'lucide-react'; // Removed CheckCircle and Versus
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 
@@ -44,7 +44,8 @@ export default async function CalendarPage() {
                 <CardContent className="p-4 space-y-2">
                   <div className="flex items-center justify-center text-xl font-medium gap-4">
                       <span>Etoile du Sahel</span>
-                      <Versus className="h-5 w-5 text-muted-foreground" />
+                       {/* Replace Versus icon with simple text */}
+                       <span className="text-muted-foreground">vs</span>
                       <span>{match.opponent}</span>
                   </div>
                    <Separator />
