@@ -60,9 +60,9 @@ export default {
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
   			},
-             // Added for league table form badges
+             // Added for league table form indicators
              'green-500': '#22c55e',
-             'yellow-500': '#eab308',
+             'gray-400': '#9ca3af', // Added Gray for Draw
              'red-500': '#ef4444',
   		},
   		borderRadius: {
