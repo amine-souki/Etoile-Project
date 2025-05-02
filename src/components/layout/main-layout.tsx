@@ -5,7 +5,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // Use App Router's useRouter
 import Header from './header';
 import Footer from './footer';
-import NewsletterSignup from './newsletter-signup';
+// Removed SidebarProvider import
+import NewsletterSignup from './newsletter-signup'; // Added import
 import PageLoader from '@/components/ui/page-loader'; // Import the new loader component
 
 interface MainLayoutProps {
@@ -92,6 +93,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
 
   return (
+    // SidebarProvider removed
     <div className="flex flex-col min-h-screen">
       {isLoading && <PageLoader />} {/* Conditionally render loader */}
       <Header />
