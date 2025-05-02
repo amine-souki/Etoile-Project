@@ -92,18 +92,19 @@ const mockMatches: Match[] = [
     awayScore: null,
     status: 'Scheduled',
   },
-  // { // Removed Coupe de Tunisie match vs Stade Tunisien as per request
-  //   competition: 'Coupe de Tunisie',
-  //   dateTime: parseDateTime('17.05.', '16:00'),
-  //   homeTeam: 'Etoile Sahel',
-  //   homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
-  //   awayTeam: 'Stade Tunisien',
-  //   awayLogoUrl: 'https://media.api-sports.io/football/teams/991.png',
-  //   homeScore: null,
-  //   awayScore: null,
-  //   status: 'Scheduled',
-  // },
-  // Removed past matches vs US Monastir and ES Tunis
+  { // Re-added Coupe de Tunisie match vs Stade Tunisien
+    competition: 'Coupe de Tunisie',
+    round: '8èmes de finale', // Added round info
+    dateTime: parseDateTime('17.05.', '16:00'),
+    homeTeam: 'Etoile Sahel',
+    homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
+    awayTeam: 'Stade Tunisien',
+    awayLogoUrl: 'https://media.api-sports.io/football/teams/991.png',
+    stadium: 'Stade Olympique de Sousse', // Example stadium
+    homeScore: null,
+    awayScore: null,
+    status: 'Scheduled',
+  },
 ];
 
 /**
@@ -115,12 +116,12 @@ const mockMatches: Match[] = [
 export async function getMatchCalendar(competitionFilter?: string): Promise<Match[]> {
   // TODO: Implement this by calling an API.
 
-  let matches = mockMatches; // Use the already filtered list
+  let matches = mockMatches;
 
   if (competitionFilter) {
     matches = matches.filter(match => match.competition === competitionFilter);
   }
 
-  // Sort matches by date (already sorted in mock data, but good practice)
+  // Sort matches by date
   return matches.sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime());
 }
