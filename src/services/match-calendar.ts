@@ -22,6 +22,10 @@ export interface Match {
   awayScore?: number | null;
   /** The status of the match (e.g., 'Scheduled', 'Finished'). */
   status: 'Scheduled' | 'Finished' | 'Live'; // Add more statuses if needed
+  /** Optional: The round or matchday designation (e.g., 'Journée 34'). */
+  round?: string;
+  /** Optional: The name of the stadium or venue. */
+  stadium?: string;
 }
 
 /**
@@ -47,37 +51,43 @@ function parseDateTime(dateStr: string, timeStr: string): Date {
 }
 
 
-// Mock data - Filtered to include only the requested upcoming matches
+// Mock data - Filtered to include only the requested upcoming matches and added round/stadium
 const mockMatches: Match[] = [
   {
     competition: 'Ligue 1',
+    round: 'Playoffs - Journée 8', // Example round
     dateTime: parseDateTime('04.05.', '15:00'),
     homeTeam: 'Etoile Sahel',
     homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
     awayTeam: 'Gafsa', // Assuming EGS Gafsa
     awayLogoUrl: 'https://media.api-sports.io/football/teams/10604.png',
+    stadium: 'Stade Olympique de Sousse', // Example stadium
     homeScore: null,
     awayScore: null,
     status: 'Scheduled',
   },
   {
     competition: 'Ligue 1',
+    round: 'Playoffs - Journée 9', // Example round
     dateTime: parseDateTime('10.05.', '16:00'),
     homeTeam: 'Club Africain',
     homeLogoUrl: 'https://media.api-sports.io/football/teams/988.png',
     awayTeam: 'Etoile Sahel',
     awayLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
+    stadium: 'Stade Hammadi Agrebi', // Example stadium
     homeScore: null,
     awayScore: null,
     status: 'Scheduled',
   },
   {
     competition: 'Ligue 1',
+    round: 'Playoffs - Journée 10', // Example round
     dateTime: parseDateTime('14.05.', '16:00'),
     homeTeam: 'Etoile Sahel',
     homeLogoUrl: 'https://media.api-sports.io/football/teams/990.png',
     awayTeam: 'CS Sfaxien',
     awayLogoUrl: 'https://media.api-sports.io/football/teams/983.png',
+    stadium: 'Stade Olympique de Sousse', // Example stadium
     homeScore: null,
     awayScore: null,
     status: 'Scheduled',
