@@ -64,30 +64,46 @@ export default function RootLayout({
     setIsMounted(true);
   }, []);
 
+  // Define metadata here, inside the component, but only after mounting
+  // to access i18n safely. We'll update the document title via useEffect
+  // once mounted.
+
+  useEffect(() => {
+    if (isMounted) {
+      document.title = i18n.t('title');
+      const descriptionMeta = document.querySelector('meta[name="description"]');
+      if (descriptionMeta) {
+        descriptionMeta.setAttribute('content', i18n.t('description'));
+      }
+    }
+  }, [isMounted, i18n, i18n.language]); // Rerun when language changes
+
   if (!isMounted) {
-    // Render a fallback UI while i18next is initializing or in non-browser environments.
+    // Render a fallback UI with a spinner while i18next is initializing
+    // or in non-browser environments.
     return (
       <html lang={i18n.language}>
+        <head>
+           {/* Basic title/meta during loading */}
+           <title>Loading...</title>
+           <meta name="description" content="Loading content..." />
+        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <div>Loading...</div>
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-background">
+            <div className="page-loader-spinner"></div> {/* Use spinner class */}
+          </div>
         </body>
       </html>
     );
   }
 
-  // Define metadata here, inside the component
-  const metadata: Metadata = {
-    title: i18n.t('title'), // Access translated title
-    description: i18n.t('description'), // Access translated description
-  };
 
   return (
     <html lang={i18n.language}>
       <head>
-        <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
+         {/* Title and meta will be updated by useEffect */}
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -98,5 +114,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-
