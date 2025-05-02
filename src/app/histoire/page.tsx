@@ -63,9 +63,11 @@ const parseSeasonYear = (season: string): number => {
 
 // Function to calculate trophy count up to a selected year
 const calculateTrophiesByYear = (trophies: typeof historyData.trophies, selectedYear: number) => {
+  const MAX_SCALE = 20; // Set the maximum scale for each progress bar
   return trophies.map(trophy => {
     const count = trophy.winYears.filter(year => year <= selectedYear).length;
-    const percentage = trophy.totalCount > 0 ? (count / trophy.totalCount) * 100 : 0;
+    // Calculate percentage based on the fixed scale of 20, capped at 100%
+    const percentage = Math.min((count / MAX_SCALE) * 100, 100);
     return { ...trophy, currentCount: count, percentage };
   });
 };
@@ -153,7 +155,7 @@ export default function HistoryPage() {
              <h2 className="text-3xl font-bold text-primary">
                  Un palmarès pour la légende
              </h2>
-             <p className="text-muted-foreground mt-2">Un héritage de victoires et de trophées.</p>
+             <p className="text-muted-foreground mt-2">Un héritage de victoires et de trophées.</p> {/* Kept this line */}
          </header>
          <div className="relative md:flex md:gap-8">
             {/* Image Column */}
@@ -192,7 +194,7 @@ export default function HistoryPage() {
                            <ol className="rm-palmares__list space-y-5">
                               {leftTrophies.map((trophy) => (
                                  <li key={trophy.name} className="rm-palmares__item">
-                                    <div className="rm-bar flex flex-col group" title={`${trophy.currentCount} / ${trophy.totalCount} (${trophy.years})`}>
+                                    <div className="rm-bar flex flex-col group" title={`${trophy.currentCount} (${trophy.years})`}>
                                         <div className="rm-bar__content flex items-center gap-3 mb-1">
                                             <trophy.icon className="rm-bar__icon h-6 w-6 text-accent flex-shrink-0" />
                                             <span className="rm-bar__number text-lg font-bold text-foreground">{trophy.currentCount}</span>
@@ -210,7 +212,7 @@ export default function HistoryPage() {
                            <ol className="rm-palmares__list space-y-5">
                               {rightTrophies.map((trophy) => (
                                  <li key={trophy.name} className="rm-palmares__item">
-                                    <div className="rm-bar flex flex-col group" title={`${trophy.currentCount} / ${trophy.totalCount} (${trophy.years})`}>
+                                    <div className="rm-bar flex flex-col group" title={`${trophy.currentCount} (${trophy.years})`}>
                                         <div className="rm-bar__content flex items-center gap-3 mb-1">
                                             <trophy.icon className="rm-bar__icon h-6 w-6 text-accent flex-shrink-0" />
                                             <span className="rm-bar__number text-lg font-bold text-foreground">{trophy.currentCount}</span>
@@ -338,3 +340,4 @@ export default function HistoryPage() {
     </div>
   );
 }
+
