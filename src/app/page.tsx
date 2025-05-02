@@ -54,7 +54,7 @@ export default async function Home() {
       {/* Hero Section with Next Match Countdown */}
        <section className="relative h-[500px] md:h-[600px] rounded-lg overflow-hidden shadow-lg group">
         <Image
-          src="https://picsum.photos/1200/700?random=hero" // Slightly different hero image
+          src="https://content.mosaiquefm.net/uploads/content/thumbnails/ess_1688152376.jpg" // Slightly different hero image
           alt="Stade Olympique de Sousse"
           layout="fill"
           objectFit="cover"
@@ -140,3 +140,4 @@ export default async function Home() {
     </div>
   );
 }
+

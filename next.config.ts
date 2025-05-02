@@ -46,9 +46,16 @@ const nextConfig: NextConfig = {
         hostname: 'scontent.ftun19-1.fna.fbcdn.net',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'content.mosaiquefm.net',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
 };
 
 export default nextConfig;
+
