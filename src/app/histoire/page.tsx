@@ -1,35 +1,44 @@
 
+'use client'; // Make this a Client Component
+
+import * as React from 'react'; // Import React and hooks
+import { useState, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Landmark, Trophy, Users, Clock, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Separator } from '@/components/ui/separator'; // Import Separator
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; // Import Tabs components
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Slider } from '@/components/ui/slider'; // Import ShadCN Slider
 
-export const metadata = {
-  title: 'Histoire du Club - Etoile Sportive Du Sahel',
-};
+// Removed metadata export as it's not supported in Client Components directly
+// export const metadata = { ... }; // Move to parent layout or generateMetadata if needed
 
+// Keep original data structure but add winYears array
 const historyData = {
   foundationYear: 1925,
   introText: "Fondé en 1925, l'Etoile Sportive du Sahel est l'un des clubs les plus prestigieux de Tunisie et d'Afrique. Surnommé 'Jawharat es-Sahel' (La Perle du Sahel), le club a marqué l'histoire du football tunisien et africain par ses nombreux succès et son engagement envers l'excellence sportive.",
   keyMoments: [
     { year: 1950, title: 'Premier Titre de Champion', description: 'L\'ESS remporte son premier championnat de Tunisie.', icon: Trophy, dataAiHint: "vintage football trophy" },
     { year: 1963, title: 'Doublé Coupe-Championnat', description: 'Une saison historique avec la victoire en Coupe et Championnat.', icon: Trophy, dataAiHint: "multiple trophies" },
-    { year: 1997, title: 'Coupe de la CAF', description: 'Premier titre continental majeur.', icon: Trophy, dataAiHint: "african football trophy" },
+    { year: 1997, title: 'Coupe d\'Afrique des Vainqueurs', description: 'Victoire dans la compétition.', icon: Trophy, dataAiHint: "african football trophy" }, // Updated name
+    { year: 1999, title: 'Coupe de la Confédération', description: 'Victoire en Coupe de la CAF.', icon: Trophy, dataAiHint: "confederation cup africa" }, // Added 1999 CAF Cup
+    { year: 2003, title: 'Coupe d\'Afrique des Vainqueurs', description: 'Deuxième victoire dans la compétition.', icon: Trophy, dataAiHint: "african football trophy" }, // Added 2003 Cup Winners Cup
+    { year: 2006, title: 'Coupe de la Confédération', description: 'Nouveau succès continental.', icon: Trophy, dataAiHint: "confederation cup africa" }, // Added 2006 CAF Cup
     { year: 2007, title: 'Ligue des Champions de la CAF', description: 'Consécration suprême sur le continent africain.', icon: Trophy, dataAiHint: "champions league trophy africa" },
-    { year: 2015, title: 'Coupe de la Confédération', description: 'Nouveau succès continental.', icon: Trophy, dataAiHint: "confederation cup africa" },
-  ],
+    { year: 2008, title: 'Supercoupe de la CAF', description: 'Victoire en Supercoupe Africaine.', icon: Trophy, dataAiHint: "african super cup trophy" }, // Added 2008 Super Cup
+    { year: 2015, title: 'Coupe de la Confédération', description: 'Troisième succès dans la compétition.', icon: Trophy, dataAiHint: "confederation cup africa" },
+    { year: 2023, title: '11ème Championnat', description: 'Dernier titre de champion en date.', icon: Trophy, dataAiHint: "modern football trophy tunisia" },
+  ].sort((a, b) => a.year - b.year), // Sort key moments chronologically
   trophies: [
-    { name: 'Championnat de Tunisie', count: 11, icon: Trophy, years: '22/23, 15/16, 06/07, 96/97, 86/87, 85/86, 71/72, 65/66, 62/63, 57/58, 49/50' },
-    { name: 'Coupe de Tunisie', count: 10, icon: Trophy, years: '14/15, 13/14, 11/12, 95/96, 82/83, 80/81, 74/75, 73/74, 62/63, 58/59' },
-    { name: 'Supercoupe de Tunisie', count: 3, icon: Trophy, years: '86/87, 85/86, 72/73' },
-    { name: 'Ligue des Champions CAF', count: 1, icon: Trophy, years: '2007' },
-    { name: 'Coupe de la Confédération CAF', count: 4, icon: Trophy, years: '2015, 2006, 98/99, 94/95' },
-    { name: 'Supercoupe de la CAF', count: 2, icon: Trophy, years: '07/08, 97/98' },
-    { name: "Coupe d'Afrique des Vainqueurs", count: 2, icon: Trophy, years: '02/03, 96/97' },
+      { name: 'Championnat de Tunisie', totalCount: 11, icon: Trophy, years: '22/23, 15/16, 06/07, 96/97, 86/87, 85/86, 71/72, 65/66, 62/63, 57/58, 49/50', winYears: [2023, 2016, 2007, 1997, 1987, 1986, 1972, 1966, 1963, 1958, 1950] },
+      { name: 'Coupe de Tunisie', totalCount: 10, icon: Trophy, years: '14/15, 13/14, 11/12, 95/96, 82/83, 80/81, 74/75, 73/74, 62/63, 58/59', winYears: [2015, 2014, 2012, 1996, 1983, 1981, 1975, 1974, 1963, 1959] },
+      { name: 'Supercoupe de Tunisie', totalCount: 3, icon: Trophy, years: '86/87, 85/86, 72/73', winYears: [1987, 1986, 1973] },
+      { name: 'Ligue des Champions CAF', totalCount: 1, icon: Trophy, years: '2007', winYears: [2007] },
+      { name: 'Coupe de la Confédération CAF', totalCount: 4, icon: Trophy, years: '2015, 2006, 98/99, 94/95', winYears: [2015, 2006, 1999, 1995] },
+      { name: 'Supercoupe de la CAF', totalCount: 2, icon: Trophy, years: '07/08, 97/98', winYears: [2008, 1998] },
+      { name: "Coupe d'Afrique des Vainqueurs", totalCount: 2, icon: Trophy, years: '02/03, 96/97', winYears: [2003, 1997] },
   ],
   legendaryPlayers: [
     { name: 'Abdelmajid Chetali', period: '1957–1968', imageUrl: 'https://picsum.photos/100/100?random=71', dataAiHint: "vintage football player black and white" },
@@ -45,16 +54,46 @@ const historyData = {
   ]
 };
 
-// Helper function to split trophies into two columns
-const splitTrophies = (trophies: typeof historyData.trophies) => {
-  const mid = Math.ceil(trophies.length / 2);
-  return [trophies.slice(0, mid), trophies.slice(mid)];
+// Helper function to parse season year (takes the later year, e.g., 96/97 -> 1997)
+const parseSeasonYear = (season: string): number => {
+    const parts = season.split('/');
+    const yearSuffix = parseInt(parts[1], 10);
+    return yearSuffix < 50 ? 2000 + yearSuffix : 1900 + yearSuffix; // Adjust century based on year
+};
+
+// Function to calculate trophy count up to a selected year
+const calculateTrophiesByYear = (trophies: typeof historyData.trophies, selectedYear: number) => {
+  return trophies.map(trophy => {
+    const count = trophy.winYears.filter(year => year <= selectedYear).length;
+    const percentage = trophy.totalCount > 0 ? (count / trophy.totalCount) * 100 : 0;
+    return { ...trophy, currentCount: count, percentage };
+  });
 };
 
 
 export default function HistoryPage() {
-  const [leftTrophies, rightTrophies] = splitTrophies(historyData.trophies);
-  const currentYear = new Date().getFullYear(); // For slider max value
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+
+  // Calculate trophy counts based on the selected year using useMemo
+  const trophiesByYear = useMemo(() => {
+      return calculateTrophiesByYear(historyData.trophies, selectedYear);
+  }, [selectedYear]); // Recalculate only when selectedYear changes
+
+
+  // Split trophies for display
+  const splitTrophies = (trophies: typeof trophiesByYear) => {
+    const mid = Math.ceil(trophies.length / 2);
+    return [trophies.slice(0, mid), trophies.slice(mid)];
+  };
+  const [leftTrophies, rightTrophies] = splitTrophies(trophiesByYear);
+
+
+  // Handle slider change
+  const handleSliderChange = useCallback((value: number[]) => {
+    setSelectedYear(value[0]);
+  }, []); // Empty dependency array as setSelectedYear is stable
+
 
   return (
     <div className="space-y-10 bg-background text-foreground">
@@ -102,12 +141,13 @@ export default function HistoryPage() {
               <CardDescription className="text-base leading-relaxed text-foreground/80">
                 {historyData.introText}
               </CardDescription>
+               <p className="text-sm text-muted-foreground mt-4">Un héritage de victoires et de trophées.</p>
             </div>
           </div>
         </Card>
       </section>
 
-      {/* Palmarès Section - Updated Design */}
+      {/* Palmarès Section - Updated Design with Slider Functionality */}
       <section className="container mx-auto px-4 py-12">
          <header className="text-left mb-8">
              <h2 className="text-3xl font-bold text-primary">
@@ -116,73 +156,69 @@ export default function HistoryPage() {
              <p className="text-muted-foreground mt-2">Un héritage de victoires et de trophées.</p>
          </header>
          <div className="relative md:flex md:gap-8">
-            {/* Image Column (Hidden on small screens, takes space on md+) */}
+            {/* Image Column */}
             <div className="hidden md:block md:w-1/3 lg:w-1/4 xl:w-1/5 flex-shrink-0">
-                <div className="sticky top-24"> {/* Make image sticky */}
+                <div className="sticky top-24">
                     <Image
-                        src="https://publish-p47754-e237306.adobeaemcloud.com/adobe/dynamicmedia/deliver/dm-aid--8b61ca70-43f7-4be6-9c51-99888d45a26f/ND_SALA_JUNTAS_HE02463Thumb.app.webp?preferwebp=true&width=700" // Using image from example
+                        src="https://publish-p47754-e237306.adobeaemcloud.com/adobe/dynamicmedia/deliver/dm-aid--8b61ca70-43f7-4be6-9c51-99888d45a26f/ND_SALA_JUNTAS_HE02463Thumb.app.webp?preferwebp=true&width=700"
                         alt="Palmarès ESS - Trophées"
                         width={400}
                         height={600}
-                        className="rounded-lg shadow-lg object-cover h-[600px]" // Fixed height
+                        className="rounded-lg shadow-lg object-cover h-[600px]"
                         data-ai-hint="trophy cabinet football display"
                     />
                 </div>
             </div>
 
-             {/* Content Column (Takes remaining space) */}
-            <div className="flex-1 rm-palmares__container"> {/* Added rm-palmares__container class */}
+             {/* Content Column */}
+            <div className="flex-1 rm-palmares__container">
                 <Card className="shadow-lg border rounded-lg overflow-hidden">
                     <CardContent className="p-6 md:p-8">
                         {/* Tabs and Link Row */}
-                        <div className="rm-palmares__nav flex justify-between items-center mb-6 border-b pb-4"> {/* Added rm-palmares__nav class */}
-                            <Tabs defaultValue="football" className="rm-palmares__tabs"> {/* Added rm-palmares__tabs class */}
+                        <div className="rm-palmares__nav flex justify-between items-center mb-6 border-b pb-4">
+                            <Tabs defaultValue="football" className="rm-palmares__tabs">
                                 <TabsList className="bg-transparent p-0 gap-2">
                                     <TabsTrigger value="football" className="rm-tabs__pill rm-tabs__pill--x-small rm-tabs__pill--selected data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs">Football</TabsTrigger>
-                                    <TabsTrigger value="basketball" className="rm-tabs__pill rm-tabs__pill--x-small data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs border border-border">Basket-ball</TabsTrigger>
-                                    {/* Add other sports later */}
+                                    {/* Add other sports tabs if needed */}
+                                    {/* <TabsTrigger value="basketball" className="rm-tabs__pill rm-tabs__pill--x-small data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs border border-border">Basket-ball</TabsTrigger> */}
                                 </TabsList>
                             </Tabs>
-                             <Button variant="link" className="p-0 text-primary hover:underline text-xs md:text-sm h-auto rm-palmares__button"> {/* Added rm-palmares__button class */}
-                                Voir le palmarès complet <ArrowRight className="ml-1 h-3 w-3"/>
-                            </Button>
+                             {/* Removed "Voir le palmarès complet" button as the slider serves this purpose */}
                         </div>
 
                          {/* Trophy List Columns */}
-                         <div className="rm-palmares__content grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6"> {/* Added rm-palmares__content class */}
+                         <div className="rm-palmares__content grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                            {/* Column 1 */}
-                           <ol className="rm-palmares__list space-y-5"> {/* Added rm-palmares__list class */}
+                           <ol className="rm-palmares__list space-y-5">
                               {leftTrophies.map((trophy) => (
                                  <li key={trophy.name} className="rm-palmares__item">
-                                    <div className="rm-bar flex flex-col group" title={trophy.years}>
+                                    <div className="rm-bar flex flex-col group" title={`${trophy.currentCount} / ${trophy.totalCount} (${trophy.years})`}>
                                         <div className="rm-bar__content flex items-center gap-3 mb-1">
-                                            {/* Use a generic Trophy icon for now */}
-                                            <Trophy className="rm-bar__icon h-6 w-6 text-accent flex-shrink-0" />
-                                            <span className="rm-bar__number text-lg font-bold text-foreground">{trophy.count}</span>
+                                            <trophy.icon className="rm-bar__icon h-6 w-6 text-accent flex-shrink-0" />
+                                            <span className="rm-bar__number text-lg font-bold text-foreground">{trophy.currentCount}</span>
                                              <p className="rm-palmares__name text-sm font-medium text-muted-foreground truncate flex-1">{trophy.name}</p>
                                         </div>
-                                        {/* Decorative Bar */}
+                                        {/* Dynamic Progress Bar */}
                                         <div className="rm-bar__bg h-1 w-full bg-muted rounded-full overflow-hidden ml-9">
-                                            <div className="rm-bar__progress h-full bg-primary rounded-full transition-all duration-300 group-hover:bg-accent" style={{ width: '100%' }}></div>
+                                            <div className="rm-bar__progress h-full bg-primary rounded-full transition-all duration-300 group-hover:bg-accent" style={{ width: `${trophy.percentage}%` }}></div>
                                         </div>
                                     </div>
                                  </li>
                               ))}
                            </ol>
                            {/* Column 2 */}
-                           <ol className="rm-palmares__list space-y-5"> {/* Added rm-palmares__list class */}
+                           <ol className="rm-palmares__list space-y-5">
                               {rightTrophies.map((trophy) => (
                                  <li key={trophy.name} className="rm-palmares__item">
-                                    <div className="rm-bar flex flex-col group" title={trophy.years}>
+                                    <div className="rm-bar flex flex-col group" title={`${trophy.currentCount} / ${trophy.totalCount} (${trophy.years})`}>
                                         <div className="rm-bar__content flex items-center gap-3 mb-1">
-                                             {/* Use a generic Trophy icon for now */}
-                                            <Trophy className="rm-bar__icon h-6 w-6 text-accent flex-shrink-0" />
-                                            <span className="rm-bar__number text-lg font-bold text-foreground">{trophy.count}</span>
+                                            <trophy.icon className="rm-bar__icon h-6 w-6 text-accent flex-shrink-0" />
+                                            <span className="rm-bar__number text-lg font-bold text-foreground">{trophy.currentCount}</span>
                                              <p className="rm-palmares__name text-sm font-medium text-muted-foreground truncate flex-1">{trophy.name}</p>
                                         </div>
-                                        {/* Decorative Bar */}
+                                        {/* Dynamic Progress Bar */}
                                         <div className="rm-bar__bg h-1 w-full bg-muted rounded-full overflow-hidden ml-9">
-                                            <div className="rm-bar__progress h-full bg-primary rounded-full transition-all duration-300 group-hover:bg-accent" style={{ width: '100%' }}></div>
+                                            <div className="rm-bar__progress h-full bg-primary rounded-full transition-all duration-300 group-hover:bg-accent" style={{ width: `${trophy.percentage}%` }}></div>
                                         </div>
                                     </div>
                                  </li>
@@ -190,22 +226,20 @@ export default function HistoryPage() {
                            </ol>
                         </div>
 
-                        {/* Footer - Range Slider (Stylized) - Functionality not implemented */}
-                        <div className="rm-palmares__footer mt-8 pt-6 border-t"> {/* Added rm-palmares__footer class */}
-                           <div className="rm-palmares__control rm-range flex items-center gap-4"> {/* Added rm-palmares__control rm-range classes */}
-                                <input
-                                    type="range"
-                                    name="palmares"
-                                    id="palmares"
-                                    className="rm-range__input flex-grow cursor-pointer h-2 bg-muted rounded-lg appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary"
+                        {/* Footer - Range Slider */}
+                        <div className="rm-palmares__footer mt-8 pt-6 border-t">
+                           <div className="rm-palmares__control rm-range flex items-center gap-4">
+                                <Slider
+                                    id="palmaresYearSlider"
                                     min={historyData.foundationYear}
                                     max={currentYear}
-                                    step="1"
-                                    defaultValue={currentYear}
+                                    step={1}
+                                    value={[selectedYear]} // Controlled component value
+                                    onValueChange={handleSliderChange} // Use the handler
+                                    className="flex-grow"
                                     aria-label="Année du palmarès"
-                                    aria-valuetext={`Année ${currentYear}`} // Added aria-valuetext
                                 />
-                                <span className="rm-range__value text-sm font-medium text-foreground w-12 text-right">{currentYear}</span>
+                                <span className="rm-range__value text-sm font-medium text-foreground w-12 text-right">{selectedYear}</span>
                            </div>
                         </div>
                     </CardContent>
@@ -226,11 +260,8 @@ export default function HistoryPage() {
         <div className="relative space-y-12 before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent md:before:mx-auto md:before:ml-0">
           {historyData.keyMoments.map((moment, index) => (
             <div key={moment.year} className={`relative flex items-center ${index % 2 === 0 ? 'md:justify-start' : 'md:justify-end'} md:justify-between`}>
-                {/* Dot */}
                 <div className={`absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-primary border-2 border-background shadow md:left-1/2 md:-translate-x-1/2 flex items-center justify-center`}>
-                    {/* Icon inside the dot is difficult with standard Tailwind, consider pseudo-elements or removing icon */}
                 </div>
-                 {/* Content Card */}
                 <Card className={`w-full md:w-[45%] p-4 shadow-lg bg-card ${index % 2 === 0 ? 'ml-12 md:ml-0' : 'ml-12 md:ml-0 md:mr-0'}`}>
                     <div className="flex items-center justify-between mb-2">
                         <Badge variant="default" className="text-base">{moment.year}</Badge>
@@ -238,7 +269,6 @@ export default function HistoryPage() {
                     </div>
                     <h4 className="font-semibold text-lg mb-1">{moment.title}</h4>
                     <p className="text-sm text-muted-foreground">{moment.description}</p>
-                    {/* Optional Image inside card */}
                     <Image
                        src={`https://picsum.photos/300/150?random=${75 + index}`}
                        alt={moment.title}
