@@ -86,3 +86,34 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Page Loader Styles */
+@layer components {
+  .page-loader {
+    @apply transition-opacity duration-300 ease-in-out;
+    /* Add animation for fade-in/out if desired */
+  }
+
+  .page-loader-spinner {
+    @apply h-12 w-12 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite];
+  }
+
+  /* Optional: Add fade-in/out animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  .page-loader-fade-in {
+    animation: fadeIn 0.3s ease-in-out forwards;
+  }
+
+  .page-loader-fade-out {
+    animation: fadeOut 0.3s ease-in-out forwards;
+  }
+}
