@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, BarChart3, Newspaper, Swords, Hand, Dribbble, Volleyball, ArrowRight, Shirt } from 'lucide-react'; // Added Shirt, ArrowRight
 import { Badge } from '@/components/ui/badge';
@@ -7,6 +8,7 @@ import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"; // Added Tabs
 import PlayerCard from '@/components/player-card'; // Import the new PlayerCard component
+import { cn } from '@/lib/utils'; // Import cn for styling Link
 
 export const dynamicParams = false; // Prevent generation of routes not explicitly listed
 
@@ -118,7 +120,19 @@ export default async function SportSectionPage({ params }: { params: { sport: st
               <TabsList className="grid w-full grid-cols-3 mb-6">
                   <TabsTrigger value="presentation">Présentation</TabsTrigger>
                   <TabsTrigger value="effectif">Effectif</TabsTrigger>
-                  <TabsTrigger value="classement">Classement</TabsTrigger>
+                   {/* Changed TabsTrigger to a Link styled as a tab */}
+                   <Link
+                     href="/sections/football/classement"
+                     className={cn(
+                       "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+                       // Apply similar styling as TabsTrigger, but adjust for Link
+                       "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm", // Keep active style for consistency visual
+                       "hover:bg-muted/50" // Example hover effect for Link
+                     )}
+                     // Add aria-current or similar if you want to highlight based on route
+                   >
+                     Classement
+                   </Link>
               </TabsList>
               <TabsContent value="presentation">
                   {/* Add content for Presentation tab if needed */}
@@ -193,28 +207,8 @@ export default async function SportSectionPage({ params }: { params: { sport: st
                       {sportDetails.team.attaquants.length === 0 && <p className="text-muted-foreground text-center">Aucun attaquant enregistré.</p>}
                   </section>
               </TabsContent>
-              <TabsContent value="classement">
-                  <Card>
-                      <CardHeader>
-                          <CardTitle className="flex items-center justify-between">
-                              <span className="flex items-center gap-2"><BarChart3 className="h-5 w-5 text-primary" /> Classement</span>
-                              <Button variant="outline" size="sm" asChild>
-                                  <Link href="/sections/football/classement">
-                                      Voir classement complet <ArrowRight className="ml-2 h-4 w-4" />
-                                  </Link>
-                              </Button>
-                          </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-2">
-                           {/* Simplified Ranking Display */}
-                          <p><strong>Classement:</strong> {sportDetails.results.rank}e place</p>
-                          <p><strong>Points:</strong> {sportDetails.results.points}</p>
-                           <Link href="/sections/football/classement" className="text-sm text-primary hover:underline">
-                              Détails du classement...
-                           </Link>
-                      </CardContent>
-                  </Card>
-              </TabsContent>
+              {/* Classement content removed as it's now a direct link */}
+              {/* <TabsContent value="classement"> ... </TabsContent> */}
           </Tabs>
       ) : (
           // Fallback for other sports (simplified view)
