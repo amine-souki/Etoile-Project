@@ -1,10 +1,11 @@
 
+
 'use client'; // Make this a Client Component
 
 import * as React from 'react'; // Import React and hooks
 import { useState, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Landmark, Trophy, Users, Clock, ArrowRight } from 'lucide-react';
+import { Landmark, Trophy, Users, Clock, ArrowRight, Camera } from 'lucide-react';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -32,13 +33,13 @@ const historyData = {
     { year: 2023, title: '11ème Championnat', description: 'Dernier titre de champion en date.', icon: Trophy, dataAiHint: "modern football trophy tunisia" },
   ].sort((a, b) => a.year - b.year), // Sort key moments chronologically
   trophies: [
-      { name: 'Championnat de Tunisie', totalCount: 11, icon: Trophy, years: '22/23, 15/16, 06/07, 96/97, 86/87, 85/86, 71/72, 65/66, 62/63, 57/58, 49/50', winYears: [2023, 2016, 2007, 1997, 1987, 1986, 1972, 1966, 1963, 1958, 1950] },
-      { name: 'Coupe de Tunisie', totalCount: 10, icon: Trophy, years: '14/15, 13/14, 11/12, 95/96, 82/83, 80/81, 74/75, 73/74, 62/63, 58/59', winYears: [2015, 2014, 2012, 1996, 1983, 1981, 1975, 1974, 1963, 1959] },
-      { name: 'Supercoupe de Tunisie', totalCount: 3, icon: Trophy, years: '86/87, 85/86, 72/73', winYears: [1987, 1986, 1973] },
-      { name: 'Ligue des Champions CAF', totalCount: 1, icon: Trophy, years: '2007', winYears: [2007] },
-      { name: 'Coupe de la Confédération CAF', totalCount: 4, icon: Trophy, years: '2015, 2006, 98/99, 94/95', winYears: [2015, 2006, 1999, 1995] },
-      { name: 'Supercoupe de la CAF', totalCount: 2, icon: Trophy, years: '07/08, 97/98', winYears: [2008, 1998] },
-      { name: "Coupe d'Afrique des Vainqueurs", totalCount: 2, icon: Trophy, years: '02/03, 96/97', winYears: [2003, 1997] },
+      { name: 'Championnat de Tunisie', totalCount: 11, icon: Trophy, years: '22/23, 15/16, 06/07, 96/97, 86/87, 85/86, 71/72, 65/66, 62/63, 57/58, 49/50', winYears: [2023, 2016, 2007, 1997, 1987, 1986, 1972, 1966, 1963, 1958, 1950], mainImageUrl: 'https://picsum.photos/300/200?random=tunisian-league', dataAiHint: 'tunisian league trophy' },
+      { name: 'Coupe de Tunisie', totalCount: 10, icon: Trophy, years: '14/15, 13/14, 11/12, 95/96, 82/83, 80/81, 74/75, 73/74, 62/63, 58/59', winYears: [2015, 2014, 2012, 1996, 1983, 1981, 1975, 1974, 1963, 1959], mainImageUrl: 'https://picsum.photos/300/200?random=tunisian-cup', dataAiHint: 'tunisian cup trophy' },
+      { name: 'Supercoupe de Tunisie', totalCount: 3, icon: Trophy, years: '86/87, 85/86, 72/73', winYears: [1987, 1986, 1973], mainImageUrl: 'https://picsum.photos/300/200?random=tunisian-supercup', dataAiHint: 'tunisian supercup trophy' },
+      { name: 'Ligue des Champions CAF', totalCount: 1, icon: Trophy, years: '2007', winYears: [2007], mainImageUrl: 'https://picsum.photos/300/200?random=caf-champions-league', dataAiHint: 'caf champions league trophy' },
+      { name: 'Coupe de la Confédération CAF', totalCount: 4, icon: Trophy, years: '2015, 2006, 98/99, 94/95', winYears: [2015, 2006, 1999, 1995], mainImageUrl: 'https://picsum.photos/300/200?random=caf-confederation-cup', dataAiHint: 'caf confederation cup trophy' },
+      { name: 'Supercoupe de la CAF', totalCount: 2, icon: Trophy, years: '07/08, 97/98', winYears: [2008, 1998], mainImageUrl: 'https://picsum.photos/300/200?random=caf-supercup', dataAiHint: 'caf supercup trophy' },
+      { name: "Coupe d'Afrique des Vainqueurs", totalCount: 2, icon: Trophy, years: '02/03, 96/97', winYears: [2003, 1997], mainImageUrl: 'https://picsum.photos/300/200?random=african-cup-winners', dataAiHint: 'african cup winners trophy' },
   ],
   legendaryPlayers: [
     { name: 'Abdelmajid Chetali', period: '1957–1968', imageUrl: 'https://picsum.photos/100/100?random=71', dataAiHint: "vintage football player black and white" },
@@ -54,12 +55,6 @@ const historyData = {
   ]
 };
 
-// Helper function to parse season year (takes the later year, e.g., 96/97 -> 1997)
-const parseSeasonYear = (season: string): number => {
-    const parts = season.split('/');
-    const yearSuffix = parseInt(parts[1], 10);
-    return yearSuffix < 50 ? 2000 + yearSuffix : 1900 + yearSuffix; // Adjust century based on year
-};
 
 // Function to calculate trophy count up to a selected year
 const calculateTrophiesByYear = (trophies: typeof historyData.trophies, selectedYear: number) => {
@@ -155,7 +150,7 @@ export default function HistoryPage() {
              <h2 className="text-3xl font-bold text-primary">
                  Un palmarès pour la légende
              </h2>
-             <p className="text-muted-foreground mt-2">Un héritage de victoires et de trophées.</p> {/* Kept this line */}
+             <p className="text-muted-foreground mt-2">Un héritage de victoires et de trophées.</p>
          </header>
          <div className="relative md:flex md:gap-8">
             {/* Image Column */}
@@ -186,8 +181,10 @@ export default function HistoryPage() {
                                      <TabsTrigger value="basketball" className="rm-tabs__pill rm-tabs__pill--x-small data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs border border-border">Basket-ball</TabsTrigger>
                                      <TabsTrigger value="volleyball" className="rm-tabs__pill rm-tabs__pill--x-small data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full px-4 py-1 h-auto text-xs border border-border">Volley-ball</TabsTrigger>
                                </TabsList>
-                               <Button variant="link" size="sm" className="rm-palmares__button text-xs text-primary hover:underline p-0 h-auto">
-                                   Voir le palmarès complet
+                                <Button variant="link" size="sm" asChild className="rm-palmares__button text-xs text-primary hover:underline p-0 h-auto">
+                                   <Link href="/histoire/palmares">
+                                       Voir le palmarès complet
+                                   </Link>
                                </Button>
                            </div>
 
