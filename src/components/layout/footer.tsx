@@ -35,7 +35,7 @@ export default function Footer() {
                 alt="Etoile Sportive Du Sahel Logo"
                 width={50}
                 height={50}
-                className="object-contain bg-white rounded-full p-1" // Added bg for visibility
+                className="object-contain" // Removed rounded-full
               />
               <span className="font-bold text-xl text-white">
                 Etoile Sportive Du Sahel
