@@ -19,28 +19,25 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Separator } from '@/components/ui/separator';
 import { cn } from "@/lib/utils";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Menu,
   Newspaper,
-  Video, // Updated from ImageIcon
+  Video,
   Landmark,
   GraduationCap,
-  Activity, // For 'Autres sports'
-  Swords, // For 'Football' category
+  Activity,
+  Swords,
   Hand,
   Dribbble,
   Volleyball,
-  BarChart3, // Added for classement
-  CalendarDays, // Added for calendrier
-  Users, // Added for équipe première
-  Mail, // For Contact under 'Le Club'
-  Play, // For 'Chaîne en direct'
-  Globe, // Placeholder for language
-  User, // For 'S'identifier'
-  Search, // For 'chercher'
-  ChevronDown, // For dropdowns
-  // Removed ShoppingCart and Ticket as they are not in the new design's main nav
+  BarChart3,
+  CalendarDays,
+  Users,
+  Mail,
+  Play,
+  User,
+  Search,
 } from 'lucide-react';
 import {useTranslation} from 'react-i18next';
 
@@ -63,16 +60,14 @@ const mainNavItems = [
     subItems: [
       { href: '/histoire', label: 'Histoire', icon: Landmark, description: 'Découvrez la riche histoire du club.' },
       { href: '/contact', label: 'Contact', icon: Mail, description: 'Contactez le club.' },
-      // Potentially add Infrastructure, Palmares link here if desired
     ],
   },
    {
     label: 'Académie',
     icon: GraduationCap,
-     href: '/academie', // Keep as direct link for simplicity in nav, but use dropdown structure
-    subItems: [ // Still define subItems for dropdown structure
+     href: '/academie', 
+    subItems: [ 
        { href: '/academie', label: 'Présentation', icon: GraduationCap, description: 'Le centre de formation.' },
-       // Add other academy links if they exist
     ]
    },
    {
@@ -84,17 +79,13 @@ const mainNavItems = [
       { href: '/sections/volleyball', label: 'Volleyball', icon: Volleyball, description: 'Section volleyball de l\'ESS.' },
     ],
   },
-  // Boutique and Billetterie removed from main nav as per new image
-  // { href: '/boutique', label: 'Boutique', icon: ShoppingCart },
-  // { href: '/billetterie', label: 'Billetterie', icon: Ticket },
 ];
 
 
-// ListItem component for NavigationMenu dropdowns
 const ListItem = React.forwardRef<
   React.ElementRef<"a">,
   React.ComponentPropsWithoutRef<"a"> & { icon?: React.ElementType }
->(({ className, title, icon: Icon, children, ...props }, ref) => {
+>(({ className, title, icon: IconComponent, children, ...props }, ref) => {
   return (
     <li>
       <NavigationMenuLink asChild>
@@ -107,7 +98,7 @@ const ListItem = React.forwardRef<
           {...props}
         >
          <div className="flex items-center gap-2">
-            {Icon && <Icon className="h-4 w-4 text-primary" />}
+            {IconComponent && <IconComponent className="h-4 w-4 text-primary" />}
             <div className="text-sm font-medium leading-none">{title}</div>
          </div>
           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground pl-6">
@@ -123,14 +114,32 @@ ListItem.displayName = "ListItem";
 
 export default function Header() {
   const {t, i18n} = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
+  const [currentLanguage, setCurrentLanguage] = useState('fr');
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const storedLanguage = localStorage.getItem('i18nextLng');
+    if (storedLanguage && (storedLanguage === 'fr' || storedLanguage === 'ar')) {
+      setCurrentLanguage(storedLanguage);
+      i18n.changeLanguage(storedLanguage);
+    }
+  }, [i18n]);
+
 
   const toggleLanguage = () => {
     const newLanguage = currentLanguage === 'fr' ? 'ar' : 'fr';
     i18n.changeLanguage(newLanguage);
     setCurrentLanguage(newLanguage);
-    localStorage.setItem('i18nextLng', newLanguage);
+    if (isMounted) {
+      localStorage.setItem('i18nextLng', newLanguage);
+    }
   };
+  
+  if (!isMounted) {
+    return null; // Or a loading skeleton for the header
+  }
+
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background shadow-sm">
@@ -142,14 +151,14 @@ export default function Header() {
               <Image
                 src="https://upload.wikimedia.org/wikipedia/fr/thumb/5/52/Blason_%C3%A9toile_du_sahel.svg/1200px-Blason_%C3%A9toile_du_sahel.svg.png"
                 alt="Etoile Sportive Du Sahel Logo"
-                width={45} // Slightly larger logo
+                width={45} 
                 height={45}
                 className="object-contain"
                 data-ai-hint="club logo"
-                priority // Load logo fast
+                priority 
               />
              </Link>
-             <span className="text-xs text-muted-foreground">Version bêta</span>
+             <span className="text-xs text-muted-foreground">Media Center</span>
           </div>
 
           <div className="flex items-center gap-4 md:gap-6">
@@ -165,8 +174,6 @@ export default function Header() {
                   >
                     {currentLanguage === 'fr' ? 'العربية' : 'FR'}
                 </Button>
-                <span className="text-muted-foreground">|</span>
-                {/*<Button variant="link" size="sm" className="text-xs px-1 text-muted-foreground hover:text-primary">العربية</Button>*/}
              </div>
              {/* Mobile Menu Trigger */}
              <Sheet>
@@ -248,7 +255,6 @@ export default function Header() {
                       </NavigationMenuContent>
                     </>
                   ) : (
-                     // Use regular link for items without submenus
                      <Link href={item.href || '#'} passHref legacyBehavior>
                        <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "text-sm font-medium")}>
                          {item.label}
