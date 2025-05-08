@@ -64,8 +64,11 @@ const createMatch = (
     homeTeam: string,
     awayTeam: string,
     stadium: string,
+    homeScore: number | null = null,
+    awayScore: number | null = null,
+    status: 'Scheduled' | 'Finished' | 'Live' = 'Scheduled',
     homeLogoUrl?: string,
-    awayLogoUrl?: string
+    awayLogoUrl?: string,
 ): Match => {
     const dt = parseDateTime(dateStr, timeStr);
     return {
@@ -79,9 +82,9 @@ const createMatch = (
         awayTeam,
         awayLogoUrl,
         stadium,
-        homeScore: null,
-        awayScore: null,
-        status: 'Scheduled',
+        homeScore,
+        awayScore,
+        status,
     };
 };
 
@@ -95,6 +98,9 @@ const mockMatches: Match[] = [
     '04.05.', '15:00',
     'Etoile Sahel', 'Gafsa',
     'Stade Olympique de Sousse',
+    1, // homeScore
+    1, // awayScore
+    'Finished', // status
     'https://media.api-sports.io/football/teams/990.png',
     'https://media.api-sports.io/football/teams/10604.png'
   ),
@@ -104,6 +110,7 @@ const mockMatches: Match[] = [
     '10.05.', '16:00',
     'Club Africain', 'Etoile Sahel',
     'Stade Hammadi Agrebi',
+    null, null, 'Scheduled',
     'https://media.api-sports.io/football/teams/988.png',
     'https://media.api-sports.io/football/teams/990.png'
   ),
@@ -113,15 +120,17 @@ const mockMatches: Match[] = [
     '14.05.', '16:00',
     'Etoile Sahel', 'CS Sfaxien',
     'Stade Olympique de Sousse',
+    null, null, 'Scheduled',
     'https://media.api-sports.io/football/teams/990.png',
     'https://media.api-sports.io/football/teams/983.png'
   ),
-  createMatch( // Re-added Coupe de Tunisie match vs Stade Tunisien
+  createMatch(
     'Coupe de Tunisie',
     '8èmes de finale',
     '17.05.', '16:00',
     'Etoile Sahel', 'Stade Tunisien',
     'Stade Olympique de Sousse',
+    null, null, 'Scheduled',
     'https://media.api-sports.io/football/teams/990.png',
     'https://media.api-sports.io/football/teams/991.png'
   ),
