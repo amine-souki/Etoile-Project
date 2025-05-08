@@ -17,7 +17,7 @@ import { Slider } from '@/components/ui/slider'; // Import ShadCN Slider
 // export const metadata = { ... }; // Move to parent layout or generateMetadata if needed
 
 // Keep original data structure but add winYears array
-const historyData = {
+export const historyData = {
   foundationYear: 1925,
   introText: "Fondé en 1925, l'Etoile Sportive du Sahel est l'un des clubs les plus prestigieux de Tunisie et d'Afrique. Surnommé 'Jawharat es-Sahel' (La Perle du Sahel), le club a marqué l'histoire du football tunisien et africain par ses nombreux succès et son engagement envers l'excellence sportive.",
   keyMoments: [
