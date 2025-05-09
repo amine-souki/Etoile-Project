@@ -17,7 +17,8 @@ type TrophyItem = {
   icon: React.ElementType;
   years: string; // This is a string in the current data
   winYears?: number[]; // For potential future filtering/logic
-  mainImageUrl?: string;
+  mainImageUrl?: string; // Image for the right side gallery
+  trophyIconUrl?: string; // Image for the left side trophy icon
   dataAiHint?: string;
   imageGalleryCount?: number; // For the +N on image
 };
@@ -25,49 +26,70 @@ type TrophyItem = {
 const footballPalmares: TrophyItem[] = clubHistoryData.trophies.map(trophy => ({
   ...trophy,
   mainImageUrl: trophy.mainImageUrl || `https://picsum.photos/300/200?random=football-${trophy.name.replace(/\s/g, '-')}`,
+  // Add specific trophy icon URL for CAF Champions League
+  trophyIconUrl: trophy.name === 'Ligue des Champions CAF' ? '/images/CAF Champions League Trophy.jpg' : trophy.icon === Trophy ? `https://picsum.photos/60/80?random=trophy-icon-${trophy.name.replace(/\s/g, '-')}` : undefined, // Placeholder for other trophy icons
   dataAiHint: trophy.dataAiHint || `football trophy ${trophy.name.toLowerCase()}`,
   imageGalleryCount: trophy.totalCount > 1 ? trophy.totalCount : undefined,
 }));
 
 const handballPalmares: TrophyItem[] = [
-  { name: 'Championnat de Tunisie Handball', totalCount: 5, icon: Hand, years: '2010, 2012, 2015, 2018, 2022', mainImageUrl: 'https://picsum.photos/300/200?random=handball-league', dataAiHint: 'handball league trophy', imageGalleryCount: 5 },
-  { name: 'Coupe de Tunisie Handball', totalCount: 3, icon: Hand, years: '2011, 2016, 2020', mainImageUrl: 'https://picsum.photos/300/200?random=handball-cup', dataAiHint: 'handball cup trophy', imageGalleryCount: 3 },
+  { name: 'Championnat de Tunisie Handball', totalCount: 5, icon: Hand, years: '2010, 2012, 2015, 2018, 2022', mainImageUrl: 'https://picsum.photos/300/200?random=handball-league', trophyIconUrl: `https://picsum.photos/60/80?random=trophy-icon-handball-league`, dataAiHint: 'handball league trophy', imageGalleryCount: 5 },
+  { name: 'Coupe de Tunisie Handball', totalCount: 3, icon: Hand, years: '2011, 2016, 2020', mainImageUrl: 'https://picsum.photos/300/200?random=handball-cup', trophyIconUrl: `https://picsum.photos/60/80?random=trophy-icon-handball-cup`, dataAiHint: 'handball cup trophy', imageGalleryCount: 3 },
 ];
 
 const basketballPalmares: TrophyItem[] = [
-  { name: 'Championnat de Tunisie Basketball', totalCount: 7, icon: Dribbble, years: '2008, 2009, 2013, 2014, 2017, 2019, 2021', mainImageUrl: 'https://picsum.photos/300/200?random=basketball-league', dataAiHint: 'basketball league trophy', imageGalleryCount: 7 },
-  { name: 'Coupe de Tunisie Basketball', totalCount: 4, icon: Dribbble, years: '2007, 2010, 2018, 2023', mainImageUrl: 'https://picsum.photos/300/200?random=basketball-cup', dataAiHint: 'basketball cup trophy', imageGalleryCount: 4 },
+  { name: 'Championnat de Tunisie Basketball', totalCount: 7, icon: Dribbble, years: '2008, 2009, 2013, 2014, 2017, 2019, 2021', mainImageUrl: 'https://picsum.photos/300/200?random=basketball-league', trophyIconUrl: `https://picsum.photos/60/80?random=trophy-icon-basketball-league`, dataAiHint: 'basketball league trophy', imageGalleryCount: 7 },
+  { name: 'Coupe de Tunisie Basketball', totalCount: 4, icon: Dribbble, years: '2007, 2010, 2018, 2023', mainImageUrl: 'https://picsum.photos/300/200?random=basketball-cup', trophyIconUrl: `https://picsum.photos/60/80?random=trophy-icon-basketball-cup`, dataAiHint: 'basketball cup trophy', imageGalleryCount: 4 },
 ];
 
 const volleyballPalmares: TrophyItem[] = [
-  { name: 'Championnat de Tunisie Volleyball', totalCount: 6, icon: Volleyball, years: '2005, 2006, 2011, 2012, 2016, 2020', mainImageUrl: 'https://picsum.photos/300/200?random=volleyball-league', dataAiHint: 'volleyball league trophy', imageGalleryCount: 6 },
+  { name: 'Championnat de Tunisie Volleyball', totalCount: 6, icon: Volleyball, years: '2005, 2006, 2011, 2012, 2016, 2020', mainImageUrl: 'https://picsum.photos/300/200?random=volleyball-league', trophyIconUrl: `https://picsum.photos/60/80?random=trophy-icon-volleyball-league`, dataAiHint: 'volleyball league trophy', imageGalleryCount: 6 },
 ];
 
 
 const TrophyCard = ({ trophy }: { trophy: TrophyItem }) => {
-  const IconComponent = trophy.icon;
+  const LucideIconComponent = trophy.icon;
   return (
     <Card className="w-full bg-card shadow-sm hover:shadow-md transition-shadow duration-200 mb-6">
-      <div className="flex flex-col md:flex-row items-start md:items-center">
-        {/* Left Part: Icon, Count, Name, Years */}
-        <div className="w-full md:w-2/3 p-4 sm:p-6 flex">
-          <div className="flex-shrink-0 mr-4 sm:mr-6 mt-1">
-            <IconComponent className="h-10 w-10 sm:h-12 sm:w-12 text-primary" />
-          </div>
-          <div className="flex-1">
-            <div className="flex items-baseline gap-2 sm:gap-4">
-              <span className="text-4xl sm:text-6xl font-bold text-primary">{trophy.totalCount}</span>
-              <h3 className="text-xl sm:text-2xl font-semibold text-foreground pt-1 sm:pt-2">{trophy.name}</h3>
+      <div className="flex flex-col md:flex-row items-stretch"> {/* Use items-stretch for equal height columns */}
+        {/* Left Part: Trophy Icon (actual image) + Details */}
+        <div className="w-full md:w-2/3 p-4 sm:p-6 flex items-center">
+          {/* Actual Trophy Image */}
+          {trophy.trophyIconUrl && (
+            <div className="flex-shrink-0 mr-4 sm:mr-6">
+              <Image
+                src={trophy.trophyIconUrl}
+                alt={`${trophy.name} Trophy`}
+                width={60}
+                height={80}
+                className="object-contain"
+                data-ai-hint={trophy.name === 'Ligue des Champions CAF' ? "caf champions league trophy" : "silver trophy cup"}
+              />
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-2">{trophy.years}</p>
+          )}
+
+          {/* Details: Lucide Icon, Count, Name, Years */}
+          <div className="flex-1 flex items-start"> {/* Use items-start if trophy icon is taller */}
+            {!trophy.trophyIconUrl && LucideIconComponent && ( // Show Lucide icon only if no trophyIconUrl
+                <div className="flex-shrink-0 mr-4 sm:mr-6 mt-1">
+                    <LucideIconComponent className="h-10 w-10 sm:h-12 sm:w-12 text-primary" />
+                </div>
+            )}
+            <div className="flex-1">
+              <div className="flex items-baseline gap-2 sm:gap-3">
+                <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary">{trophy.totalCount}</span>
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-foreground pt-1 sm:pt-2">{trophy.name}</h3>
+              </div>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-2">{trophy.years}</p>
+            </div>
           </div>
         </div>
 
-        {/* Right Part: Image */}
-        <div className="w-full md:w-1/3 h-48 md:h-56 lg:h-60 relative rounded-b-lg md:rounded-r-lg md:rounded-b-none overflow-hidden">
+        {/* Right Part: Image Gallery Teaser */}
+        <div className="w-full md:w-1/3 h-40 md:h-auto relative rounded-b-lg md:rounded-r-lg md:rounded-b-none overflow-hidden">
           <Image
             src={trophy.mainImageUrl || `https://picsum.photos/300/200?random=${trophy.name.replace(/\s/g, '-')}`}
-            alt={`Image for ${trophy.name}`}
+            alt={`Image gallery for ${trophy.name}`}
             layout="fill"
             objectFit="cover"
             data-ai-hint={trophy.dataAiHint || "club trophy celebration"}
@@ -103,6 +125,7 @@ export default function PalmaresCompletPage() {
 
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-foreground">Palmarès</h1>
+         <p className="text-muted-foreground mt-2">Un héritage de victoires et de trophées.</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -129,3 +152,4 @@ export default function PalmaresCompletPage() {
     </div>
   );
 }
+
