@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -55,53 +54,50 @@ const volleyballPalmares: TrophyItem[] = [
 const TrophyCard = ({ trophy }: { trophy: TrophyItem }) => {
   const LucideIconComponent = trophy.icon;
   return (
-    <Card className="w-full bg-card shadow-sm hover:shadow-md transition-shadow duration-200 mb-6">
-      <div className="flex flex-col md:flex-row items-stretch">
-        <div className="w-full md:w-2/3 p-4 sm:p-6 flex items-center">
+    <Card className="w-full bg-card shadow-sm hover:shadow-md transition-shadow duration-200 mb-6 rounded-xl">
+      <div className="flex items-center justify-between p-4 sm:p-6">
+        {/* Left Part: Icon and Count */}
+        <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
           {trophy.trophyIconUrl ? (
-            <div className="flex-shrink-0 mr-4 sm:mr-6">
-              <Image
-                src={trophy.trophyIconUrl}
-                alt={`${trophy.name} Trophy Icon`}
-                width={60}
-                height={80}
-                className="object-contain"
-                data-ai-hint={trophy.trophyIconDataAiHint || "sports trophy"}
-              />
-            </div>
+            <Image
+              src={trophy.trophyIconUrl}
+              alt={`${trophy.name} Trophy Icon`}
+              width={60} // Adjust size as needed, e.g., 60 or 80
+              height={80} // Adjust size as needed
+              className="object-contain"
+              data-ai-hint={trophy.trophyIconDataAiHint || "sports trophy"}
+            />
           ) : (
             LucideIconComponent && (
-                <div className="flex-shrink-0 mr-4 sm:mr-6 mt-1">
-                    <LucideIconComponent className="h-10 w-10 sm:h-12 sm:w-12 text-primary" />
-                </div>
+              <LucideIconComponent className="h-12 w-12 sm:h-16 sm:w-16 text-primary" />
             )
           )}
+          <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary">{trophy.totalCount}</span>
+        </div>
 
-          <div className="flex-1 flex items-start">
-            <div className="flex-1">
-              <div className="flex items-baseline gap-2 sm:gap-3">
-                <span className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary">{trophy.totalCount}</span>
-                <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-foreground pt-1 sm:pt-2">{trophy.name}</h3>
+        {/* Middle Part: Title and Years */}
+        <div className="flex-1 min-w-0 mx-4 sm:mx-6">
+          <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-foreground truncate">{trophy.name}</h3>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1 truncate">{trophy.years}</p>
+        </div>
+
+        {/* Right Part: Gallery Image */}
+        {trophy.mainImageUrl && (
+          <div className="w-32 h-20 sm:w-40 sm:h-24 md:w-48 md:h-28 relative rounded-lg overflow-hidden flex-shrink-0">
+            <Image
+              src={trophy.mainImageUrl}
+              alt={`Image gallery for ${trophy.name}`}
+              layout="fill"
+              objectFit="cover"
+              data-ai-hint={trophy.dataAiHint || "club trophy celebration"}
+            />
+            {trophy.imageGalleryCount && trophy.imageGalleryCount > 1 && (
+              <div className="absolute top-1.5 right-1.5 bg-black/70 text-white text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
+                <Camera className="h-3 w-3" /> +{trophy.imageGalleryCount}
               </div>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1 sm:mt-2">{trophy.years}</p>
-            </div>
+            )}
           </div>
-        </div>
-
-        <div className="w-full md:w-1/3 h-40 md:h-auto relative rounded-b-lg md:rounded-r-lg md:rounded-b-none overflow-hidden">
-          <Image
-            src={trophy.mainImageUrl || `https://picsum.photos/300/200?random=${trophy.name.replace(/\s/g, '-')}`}
-            alt={`Image gallery for ${trophy.name}`}
-            layout="fill"
-            objectFit="cover"
-            data-ai-hint={trophy.dataAiHint || "club trophy celebration"}
-          />
-          {trophy.imageGalleryCount && trophy.imageGalleryCount > 1 && (
-            <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-              <Camera className="h-3 w-3" /> +{trophy.imageGalleryCount}
-            </div>
-          )}
-        </div>
+        )}
       </div>
     </Card>
   );
@@ -112,10 +108,10 @@ export default function PalmaresCompletPage() {
   const [activeTab, setActiveTab] = useState('football');
 
   const TABS_CONFIG = [
-    { value: 'football', label: 'Football', data: footballPalmares },
-    { value: 'handball', label: 'Handball', data: handballPalmares },
-    { value: 'basketball', label: 'Basket-ball', data: basketballPalmares },
-    { value: 'volleyball', label: 'Volley-ball', data: volleyballPalmares },
+    { value: 'football', label: 'Football', data: footballPalmares, icon: Trophy },
+    { value: 'handball', label: 'Handball', data: handballPalmares, icon: Hand },
+    { value: 'basketball', label: 'Basket-ball', data: basketballPalmares, icon: Dribbble },
+    { value: 'volleyball', label: 'Volley-ball', data: volleyballPalmares, icon: Volleyball },
   ];
 
   return (
@@ -134,13 +130,14 @@ export default function PalmaresCompletPage() {
         <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6">
           {TABS_CONFIG.map(tab => (
             <TabsTrigger key={tab.value} value={tab.value}>
+              {tab.icon && <tab.icon className="h-4 w-4 mr-2" />}
               {tab.label}
             </TabsTrigger>
           ))}
         </TabsList>
 
         {TABS_CONFIG.map(tab => (
-          <TabsContent key={tab.value} value={tab.value} className="space-y-6">
+          <TabsContent key={tab.value} value={tab.value} className="space-y-0"> {/* Removed space-y-6 */}
             {tab.data.length > 0 ? (
               tab.data.map((trophy) => (
                 <TrophyCard key={`${tab.value}-${trophy.name}`} trophy={trophy} />
@@ -154,4 +151,3 @@ export default function PalmaresCompletPage() {
     </div>
   );
 }
-
