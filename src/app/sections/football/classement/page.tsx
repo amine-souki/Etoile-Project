@@ -13,9 +13,10 @@ export default function FootballClassementPage() {
             <h1 className="text-3xl font-bold">Classement Ligue 1</h1>
         </div>
         <p className="text-muted-foreground">
-            Suivez la position de l'Etoile Sportive du Sahel dans le championnat tunisien de Ligue 1.
+            Suivez la position de l'Etoile Sportive du Sahel dans le championnat tunisien de Ligue Professionnelle 1.
         </p>
-        <LeagueTable />
+        {/* LeagueTable will fetch its own data */}
+        <LeagueTable /> 
     </div>
   );
 }
