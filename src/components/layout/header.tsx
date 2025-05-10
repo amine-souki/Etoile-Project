@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -33,11 +34,12 @@ import {
   Volleyball,
   BarChart3,
   CalendarDays,
-  Users,
+  Users, // Users icon was missing, added back
   Mail,
   Play,
   User,
   Search,
+  Award, // Added Award for Coupe de Tunisie
 } from 'lucide-react';
 import {useTranslation} from 'react-i18next';
 
@@ -50,6 +52,7 @@ const mainNavItems = [
       { href: '/sections/football', label: 'Équipe Première', icon: Users, description: "L'effectif, staff et actualités." },
       { href: '/calendrier', label: 'Calendrier', icon: CalendarDays, description: 'Matchs à venir et résultats.' },
       { href: '/sections/football/classement', label: 'Classement', icon: BarChart3, description: 'Classement de la Ligue 1.' },
+      { href: '/sections/football/coupe-de-tunisie', label: 'Parcours Coupe de Tunisie', icon: Award, description: 'Le parcours en Coupe de Tunisie.' },
     ],
   },
   { href: '/actualites', label: 'Actualités', icon: Newspaper },
@@ -201,6 +204,7 @@ export default function Header() {
                        <Link href="/sections/football" className="flex items-center gap-2 p-2 rounded-md hover:bg-accent pl-6"><Users className="h-4 w-4" /> Équipe Première</Link>
                        <Link href="/calendrier" className="flex items-center gap-2 p-2 rounded-md hover:bg-accent pl-6"><CalendarDays className="h-4 w-4" /> Calendrier</Link>
                        <Link href="/sections/football/classement" className="flex items-center gap-2 p-2 rounded-md hover:bg-accent pl-6"><BarChart3 className="h-4 w-4" /> Classement</Link>
+                       <Link href="/sections/football/coupe-de-tunisie" className="flex items-center gap-2 p-2 rounded-md hover:bg-accent pl-6"><Award className="h-4 w-4" /> Parcours Coupe</Link>
                        <Separator />
                        <Link href="/actualites" className="flex items-center gap-2 p-2 rounded-md hover:bg-accent"><Newspaper className="h-4 w-4" /> Actualités</Link>
                        <Link href="/media" className="flex items-center gap-2 p-2 rounded-md hover:bg-accent"><Video className="h-4 w-4" /> Vidéos</Link>
@@ -234,13 +238,14 @@ export default function Header() {
             <NavigationMenuList>
               {mainNavItems.map((item) => (
                 <NavigationMenuItem key={item.label}>
-                  {item.subItems ? (
+                  {item.subItems && item.subItems.length > 0 ? ( // Check if subItems exist and is not empty
                     <>
                       <NavigationMenuTrigger className="text-sm font-medium">
+                        {item.icon && <item.icon className="h-4 w-4 mr-2 text-primary/80" />}
                         {item.label}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
-                        <ul className={`grid gap-3 p-4 md:w-[400px] ${item.subItems.length > 3 ? 'lg:w-[500px] lg:grid-cols-2' : 'lg:w-[300px]'}`}>
+                        <ul className={`grid gap-3 p-4 md:w-[400px] ${item.subItems.length > 2 ? 'lg:w-[500px] lg:grid-cols-2' : 'lg:w-[300px]'}`}>
                           {item.subItems.map((subItem) => (
                              <ListItem
                                 key={subItem.label}
@@ -257,6 +262,7 @@ export default function Header() {
                   ) : (
                      <Link href={item.href || '#'} passHref legacyBehavior>
                        <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "text-sm font-medium")}>
+                         {item.icon && <item.icon className="h-4 w-4 mr-2 text-primary/80" />}
                          {item.label}
                        </NavigationMenuLink>
                      </Link>
@@ -266,12 +272,13 @@ export default function Header() {
             </NavigationMenuList>
           </NavigationMenu>
 
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="text-sm">
+          <div className="flex items-center gap-2"> {/* Reduced gap for denser buttons */}
+            <Button variant="ghost" size="sm" className="text-sm px-3"> {/* Adjusted padding */}
                <User className="h-4 w-4 mr-1" /> S'identifier
             </Button>
-             <Button variant="ghost" size="sm" className="text-sm">
-               <Search className="h-4 w-4 mr-1" /> Chercher
+             <Button variant="ghost" size="icon" className="text-sm h-9 w-9"> {/* Icon button for search */}
+               <Search className="h-4 w-4" />
+               <span className="sr-only">Chercher</span>
             </Button>
           </div>
         </div>
@@ -279,3 +286,4 @@ export default function Header() {
     </header>
   );
 }
+
