@@ -2,9 +2,10 @@
 import AdminHeader from '@/components/admin/admin-header';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, Newspaper, CalendarDays, Ticket as TicketIcon, BarChartHorizontalBig, ArrowUp, ArrowRight, Edit3 } from 'lucide-react';
+import { Users, Newspaper, CalendarDays, Ticket as TicketIcon, BarChartHorizontalBig, ArrowRight, Edit3, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Badge } from '@/components/ui/badge'; // Added import for Badge
 
 // Mock data for dashboard
 const stats = [
