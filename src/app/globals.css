@@ -33,6 +33,8 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    /* Original Sidebar (front-end) */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -41,6 +43,14 @@ body {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Admin Panel Specific Colors */
+    --admin-sidebar-background: 212 72% 11%; /* approx #0A192F */
+    --admin-sidebar-foreground: 210 17% 82%; /* approx #B0BACC */
+    --admin-sidebar-active-background: 6 99% 33%; /* var(--primary) */
+    --admin-sidebar-active-foreground: 0 0% 100%; /* var(--primary-foreground) */
+    --admin-header-background: 0 0% 100%; /* white */
+    --admin-content-background: 0 0% 96.1%; /* var(--muted) or #F5F5F5 */
   }
   .dark {
     --background: 0 0% 3.9%; /* #0A0A0A */
@@ -67,6 +77,8 @@ body {
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    /* Original Sidebar (front-end) Dark */
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -75,6 +87,14 @@ body {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Admin Panel Specific Colors Dark */
+    --admin-sidebar-background: 212 72% 11%; /* Keeping it dark blue */
+    --admin-sidebar-foreground: 210 17% 82%;
+    --admin-sidebar-active-background: 6 99% 45%; /* Brighter Red */
+    --admin-sidebar-active-foreground: 0 0% 100%;
+    --admin-header-background: 0 0% 10%; /* Darker header for dark mode */
+    --admin-content-background: 0 0% 3.9%; /* var(--background) */
   }
 }
 
