@@ -50,7 +50,12 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			},
-  			sidebar: {
+        // Header specific colors
+        'header-top-bg': 'hsl(var(--header-top-bg))',
+        'header-main-bg': 'hsl(var(--header-main-bg))',
+        'header-accent-gold': 'hsl(var(--header-accent-gold))',
+        
+  			sidebar: { // Kept for reference, may not be used
   				DEFAULT: 'hsl(var(--sidebar-background))',
   				foreground: 'hsl(var(--sidebar-foreground))',
   				primary: 'hsl(var(--sidebar-primary))',
@@ -62,26 +67,25 @@ export default {
   			},
              // Added for league table form indicators
              'green-500': '#22c55e',
-             'gray-400': '#9ca3af', // Use Tailwind's gray-400 for Draw
-             'yellow': '#f59e0b', // Added Tailwind's yellow-500 for Draw (as per example image)
+             'gray-400': '#9ca3af', 
+             'yellow': '#f59e0b', 
              'red-500': '#ef4444',
              // Added for NextMatchCountdown component
              'white': '#ffffff',
              'black': '#000000',
              // Adding specific grays from example
-             'gray-11': '#EDEDED', // For borders in table
-             'gray-500': '#6b7280', // For the '-' icon in form
-             'foreground-3': '#333333', // Header background color from example
-             'gold': '#c3ae7b', // Text color for "Ligue 1" header from example
-             'main': '#1f2937', // Main text color from example (adjust if needed)
-             'slate-800': '#1e293b', // Background for top part of MatchCard
-             'slate-900': '#0f172a', // Footer background
-             'slate-300': '#cbd5e1', // Footer primary text
-             'slate-400': '#94a3b8', // Footer secondary text/icons
-             'slate-700': '#334155', // Footer separator
-             'slate-100': '#f1f5f9', // Presidents section background (light)
-             // Dark mode slate colors (adjust if dark mode is implemented)
-             'dark:slate-900/50': 'rgba(15, 23, 42, 0.5)', // Presidents section background (dark)
+             'gray-11': '#EDEDED', 
+             'gray-500': '#6b7280', 
+             'foreground-3': '#333333', 
+             'gold': '#c3ae7b', 
+             'main': '#1f2937', 
+             'slate-800': '#1e293b', 
+             'slate-900': '#0f172a', 
+             'slate-300': '#cbd5e1', 
+             'slate-400': '#94a3b8', 
+             'slate-700': '#334155', 
+             'slate-100': '#f1f5f9', 
+             'dark:slate-900/50': 'rgba(15, 23, 42, 0.5)', 
 
   		},
   		borderRadius: {
